@@ -1,71 +1,98 @@
-import { useState } from "react";
-import { Navbar, Page } from "./components/Navbar";
+import { useState, useEffect } from "react";
+import { Moon, Star } from "lucide-react";
+import { Navbar, type Page } from "./components/Navbar";
 import { HomePage } from "./pages/HomePage";
 import { QuranPage } from "./pages/QuranPage";
 import { SalaatPage } from "./pages/SalaatPage";
 import { DuaPage } from "./pages/DuaPage";
-import { CrescentMoon } from "./components/CrescentMoon";
+
+function SplashScreen({ onFinish }: { onFinish: () => void }) {
+  const [exiting, setExiting] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setExiting(true);
+      setTimeout(onFinish, 600);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [onFinish]);
+
+  return (
+    <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-dark-950 ${exiting ? "splash-exit" : ""}`}>
+      <div className="absolute inset-0 bg-ambient pointer-events-none" />
+      <div className="absolute inset-0 bg-stars pointer-events-none opacity-60" />
+
+      <div className="relative animate-bounce-in">
+        <div className="w-28 h-28 rounded-[32px] bg-gradient-to-br from-gold-600/15 to-gold-700/5 flex items-center justify-center border border-gold-500/10 shadow-2xl shadow-gold-500/10">
+          <Moon size={52} className="text-gold-400" strokeWidth={1.5} />
+        </div>
+        <Star size={14} className="text-gold-400 absolute -top-2 -right-2 animate-pulse-soft" fill="currentColor" />
+      </div>
+
+      <h1 className="text-5xl font-bold font-[Amiri] text-gradient-gold mt-6 animate-fade-in" style={{ animationDelay: "300ms" }}>
+        تقوى
+      </h1>
+      <p className="text-dark-300 text-sm mt-2 tracking-[0.3em] uppercase animate-fade-in" style={{ animationDelay: "500ms" }}>
+        Taqwaa
+      </p>
+      <p className="text-dark-400 text-xs mt-1 animate-fade-in" style={{ animationDelay: "700ms" }}>
+        مواقيت الصلاة بالمغرب
+      </p>
+
+      <div className="mt-10 animate-fade-in" style={{ animationDelay: "900ms" }}>
+        <div className="w-8 h-8 border-2 border-gold-500/20 border-t-gold-400 rounded-full animate-spin" />
+      </div>
+    </div>
+  );
+}
 
 export function App() {
+  const [showSplash, setShowSplash] = useState(true);
   const [activePage, setActivePage] = useState<Page>("home");
+  const [pageKey, setPageKey] = useState(0);
+
+  const handleNavigate = (page: Page) => {
+    if (page !== activePage) {
+      setActivePage(page);
+      setPageKey((k) => k + 1);
+    }
+  };
 
   const renderPage = () => {
     switch (activePage) {
-      case "home":
-        return <HomePage />;
-      case "quran":
-        return <QuranPage />;
-      case "salaat":
-        return <SalaatPage />;
-      case "dua":
-        return <DuaPage />;
-      default:
-        return <HomePage />;
+      case "home": return <HomePage />;
+      case "quran": return <QuranPage />;
+      case "salaat": return <SalaatPage />;
+      case "dua": return <DuaPage />;
+      default: return <HomePage />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-midnight-950 bg-islamic-pattern relative overflow-x-hidden">
-      {/* Stars background */}
-      <div className="fixed inset-0 bg-stars pointer-events-none" />
-      {/* Geometric overlay */}
-      <div className="fixed inset-0 geometric-overlay pointer-events-none" />
+    <div className="min-h-[100dvh] bg-dark-950 bg-app relative">
+      {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
 
-      {/* Navbar */}
-      <Navbar activePage={activePage} onNavigate={setActivePage} />
+      {/* Background layers */}
+      <div className="fixed inset-0 bg-ambient pointer-events-none" />
+      <div className="fixed inset-0 bg-stars pointer-events-none opacity-30" />
 
-      {/* Page Content */}
-      <main className="relative z-10 pb-20 sm:pb-6">
-        {renderPage()}
-      </main>
+      {/* Navigation */}
+      <Navbar activePage={activePage} onNavigate={handleNavigate} />
 
-      {/* ===== FOOTER ===== */}
-      <footer className="relative border-t border-midnight-800/50 pb-20 sm:pb-0">
-        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-gold-500/10 to-transparent" />
-        <div className="max-w-xl mx-auto px-4 py-5">
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex items-center gap-2">
-              <CrescentMoon className="w-5 h-5 opacity-60" />
-              <span className="text-gold-400/80 font-[Amiri] text-base font-bold">
-                تقوى
-              </span>
-            </div>
-            <div className="flex items-center justify-center gap-2 py-1">
-              <div className="w-3 h-3 rounded-full bg-gradient-to-br from-red-500 to-red-700 border border-red-400/30" />
-              <span className="text-midnight-400 text-[10px] tracking-widest uppercase">المملكة المغربية</span>
-              <div className="w-3 h-3 rounded-full bg-gradient-to-br from-green-500 to-green-700 border border-green-400/30" />
-            </div>
-            <p className="text-midnight-500 text-[10px] text-center leading-relaxed max-w-xs">
-              مواقيت الصلاة محسوبة وفق وزارة الأوقاف والشؤون الإسلامية
-            </p>
-            <div className="flex items-center gap-2 text-midnight-600 text-[9px]">
-              <span>API: aladhan.com</span>
-              <span>•</span>
-              <span>Method: Morocco</span>
-            </div>
-          </div>
+      {/* Main content area — responsive offsets */}
+      <main
+        key={pageKey}
+        className="
+          relative z-10 animate-page-enter
+          pb-[85px] md:pb-0
+          md:pt-16 lg:pt-0
+          lg:pl-[240px]
+        "
+      >
+        <div className="max-w-6xl mx-auto">
+          {renderPage()}
         </div>
-      </footer>
+      </main>
     </div>
   );
 }

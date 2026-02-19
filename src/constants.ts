@@ -25,11 +25,13 @@ export const MOROCCAN_CITIES: City[] = [
   { name: "Chefchaouen", nameAr: "شفشاون", lat: 35.1688, lng: -5.2636 },
 ];
 
-export const PRAYER_INFO = [
-  { key: "Fajr", nameAr: "الفجر", icon: "🌙", cssClass: "prayer-fajr", accentColor: "text-indigo-300" },
-  { key: "Sunrise", nameAr: "الشروق", icon: "🌅", cssClass: "prayer-sunrise", accentColor: "text-amber-300" },
-  { key: "Dhuhr", nameAr: "الظهر", icon: "☀️", cssClass: "prayer-dhuhr", accentColor: "text-yellow-300" },
-  { key: "Asr", nameAr: "العصر", icon: "🌤️", cssClass: "prayer-asr", accentColor: "text-orange-300" },
-  { key: "Maghrib", nameAr: "المغرب", icon: "🌇", cssClass: "prayer-maghrib", accentColor: "text-rose-300" },
-  { key: "Isha", nameAr: "العشاء", icon: "🌃", cssClass: "prayer-isha", accentColor: "text-blue-300" },
-];
+export const PRAYER_KEYS = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"] as const;
+
+export const PRAYER_INFO: Record<string, { nameAr: string; cssClass: string }> = {
+  Fajr: { nameAr: "الفجر", cssClass: "prayer-fajr" },
+  Sunrise: { nameAr: "الشروق", cssClass: "prayer-sunrise" },
+  Dhuhr: { nameAr: "الظهر", cssClass: "prayer-dhuhr" },
+  Asr: { nameAr: "العصر", cssClass: "prayer-asr" },
+  Maghrib: { nameAr: "المغرب", cssClass: "prayer-maghrib" },
+  Isha: { nameAr: "العشاء", cssClass: "prayer-isha" },
+};

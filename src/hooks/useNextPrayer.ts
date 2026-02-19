@@ -1,11 +1,10 @@
 import { useMemo } from "react";
 import { PrayerTimes } from "../types";
-import { PRAYER_INFO } from "../constants";
+import { PRAYER_KEYS, PRAYER_INFO } from "../constants";
 
 interface NextPrayer {
   key: string;
   nameAr: string;
-  icon: string;
   time: string;
   remainingMs: number;
   remainingFormatted: string;
@@ -19,13 +18,12 @@ export function useNextPrayer(
   return useMemo(() => {
     if (!prayerTimes) return null;
 
-    const prayerKeys = PRAYER_INFO.filter((p) => p.key !== "Sunrise");
-
+    const prayerKeys = PRAYER_KEYS.filter((k) => k !== "Sunrise");
     const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
     for (let i = 0; i < prayerKeys.length; i++) {
-      const prayer = prayerKeys[i];
-      const timeStr = prayerTimes[prayer.key];
+      const key = prayerKeys[i];
+      const timeStr = prayerTimes[key];
       if (!timeStr) continue;
 
       const [h, m] = timeStr.split(":").map(Number);
@@ -43,7 +41,7 @@ export function useNextPrayer(
         const prevPrayerMinutes =
           i > 0
             ? (() => {
-                const prev = prayerTimes[prayerKeys[i - 1].key];
+                const prev = prayerTimes[prayerKeys[i - 1]];
                 const [ph, pm] = prev.split(":").map(Number);
                 return ph * 60 + pm;
               })()
@@ -57,9 +55,8 @@ export function useNextPrayer(
             : 0;
 
         return {
-          key: prayer.key,
-          nameAr: prayer.nameAr,
-          icon: prayer.icon,
+          key,
+          nameAr: PRAYER_INFO[key].nameAr,
           time: timeStr,
           remainingMs: diffMs,
           remainingFormatted: `${String(hours).padStart(2, "0")}:${String(
@@ -70,7 +67,7 @@ export function useNextPrayer(
       }
     }
 
-    // After Isha - next is Fajr tomorrow
+    // After Isha
     const fajrStr = prayerTimes["Fajr"];
     if (fajrStr) {
       const [fh, fm] = fajrStr.split(":").map(Number);
@@ -78,8 +75,7 @@ export function useNextPrayer(
       const minutesTillMidnight = 24 * 60 - currentMinutes;
       const totalRem = minutesTillMidnight + fajrMinutes;
 
-      const diffMs =
-        totalRem * 60 * 1000 - now.getSeconds() * 1000;
+      const diffMs = totalRem * 60 * 1000 - now.getSeconds() * 1000;
       const diffTotalSec = Math.floor(diffMs / 1000);
       const hours = Math.floor(diffTotalSec / 3600);
       const mins = Math.floor((diffTotalSec % 3600) / 60);
@@ -92,16 +88,12 @@ export function useNextPrayer(
       const elapsed = currentMinutes - ishaMinutes;
       const progress =
         totalInterval > 0
-          ? Math.min(
-              100,
-              Math.max(0, ((elapsed < 0 ? elapsed + 24*60 : elapsed) / totalInterval) * 100)
-            )
+          ? Math.min(100, Math.max(0, ((elapsed < 0 ? elapsed + 24*60 : elapsed) / totalInterval) * 100))
           : 0;
 
       return {
         key: "Fajr",
         nameAr: "الفجر",
-        icon: "🌙",
         time: fajrStr,
         remainingMs: diffMs,
         remainingFormatted: `${String(hours).padStart(2, "0")}:${String(
