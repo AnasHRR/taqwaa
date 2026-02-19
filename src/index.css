@@ -187,6 +187,14 @@ body {
   min-width: 56px;
   text-align: center;
 }
+.countdown-box-mobile {
+  background: linear-gradient(145deg, rgba(28, 34, 66, 0.7) 0%, rgba(20, 25, 51, 0.8) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 5px 8px;
+  min-width: 38px;
+  text-align: center;
+}
 
 /* ===== PROGRESS ===== */
 .progress-track {
@@ -299,9 +307,9 @@ input[type="text"] { font-family: 'Cairo', sans-serif; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 8px 0;
-  min-width: 68px;
+  gap: 2px;
+  padding: 6px 0 4px;
+  min-width: 60px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }

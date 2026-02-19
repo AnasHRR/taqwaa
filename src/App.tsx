@@ -84,7 +84,7 @@ export function App() {
         key={pageKey}
         className="
           relative z-10 animate-page-enter
-          pb-[85px] md:pb-0
+          pb-[72px] md:pb-0
           md:pt-16 lg:pt-0
           lg:pl-[240px]
         "

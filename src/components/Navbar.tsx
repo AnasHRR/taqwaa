@@ -140,7 +140,7 @@ export function Navbar({ activePage, onNavigate }: NavbarProps) {
 
       {/* ===== MOBILE BOTTOM TAB BAR (< md) ===== */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 tab-bar safe-bottom">
-        <div className="flex items-center justify-around px-3 py-1.5">
+        <div className="flex items-center justify-around px-2 py-1">
           {NAV_ITEMS.map((item) => {
             const isActive = activePage === item.id;
             return (
