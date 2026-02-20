@@ -118,7 +118,7 @@ export function HomePage() {
             </div>
             <div>
               <h1 className="text-xl font-bold font-[Amiri] text-gradient-gold leading-tight">تقوى</h1>
-              <span className="text-dark-500 text-[7px] tracking-[0.12em] uppercase">Prayer Times</span>
+              <span className="text-dark-200 text-[7px] tracking-[0.12em] uppercase">Taqwaa</span>
             </div>
           </div>
           <button
@@ -168,7 +168,7 @@ export function HomePage() {
               <h1 className="text-4xl lg:text-5xl font-bold font-[Amiri] text-gradient-gold leading-tight">تقوى</h1>
               <div className="flex items-center gap-2 mt-1">
                 <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-gold-500/30" />
-                <span className="text-dark-300 text-[10px] lg:text-[11px] tracking-[0.2em] uppercase">Taqwaa • Prayer Times</span>
+                <span className="text-dark-200 text-[10px] lg:text-[11px] tracking-[0.2em] uppercase">Taqwaa <span className="text-gold-500">-</span> Prayer Times</span>
                 <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-gold-500/30" />
               </div>
             </div>
@@ -176,8 +176,8 @@ export function HomePage() {
 
           <div className="card-elevated px-8 py-5 lg:px-12 lg:py-6 flex flex-col items-center">
             <div className="flex items-center gap-1 mb-1">
-              <Clock size={14} className="text-gold-500/40" />
-              <span className="text-dark-500 text-[9px] tracking-wider uppercase font-semibold">التوقيت الحالي</span>
+              <Clock size={14} className="text-gold-500" />
+              <span className="text-dark-100 text-[9px] tracking-wider uppercase font-semibold">التوقيت الحالي</span>
             </div>
             <div className="flex items-baseline gap-0.5">
               <span className="text-[44px] lg:text-[56px] font-extrabold text-white font-mono tabular-nums leading-none">{hours}</span>
@@ -190,7 +190,7 @@ export function HomePage() {
               <div className="flex flex-col items-center gap-1 mt-3">
                 <div className="divider-gold w-24" />
                 <div className="flex items-center gap-2 mt-1">
-                  <CalendarDays size={12} className="text-dark-400" />
+                  <CalendarDays size={12} className="text-gold-600" />
                   <span className="text-dark-200 text-[11px] lg:text-xs">
                     {gregorianDate.weekday.en}, {gregorianDate.day} {gregorianDate.month.en} {gregorianDate.year}
                   </span>
@@ -220,8 +220,8 @@ export function HomePage() {
               {/* Countdown */}
               <div className="min-w-0">
                 <div className="flex items-center gap-1 mb-1.5">
-                  <Timer size={10} className="text-dark-500" />
-                  <span className="text-[8px] text-dark-400 tracking-wider font-semibold">الوقت المتبقي</span>
+                  <Timer size={10} className="text-gold-500" />
+                  <span className="text-[8px] text-dark-200 tracking-wider font-semibold">الوقت المتبقي</span>
                 </div>
                 <div className="flex items-center gap-[5px]">
                   {countdownParts.map((unit, i) => (
@@ -235,7 +235,7 @@ export function HomePage() {
                 </div>
                 <div className="flex mt-1">
                   {countdownLabels.map((label, i) => (
-                    <span key={i} className="text-[7px] text-dark-500 text-center" style={{ width: i === 0 ? "38px" : "50px", marginLeft: i === 0 ? "0" : "0" }}>{label}</span>
+                    <span key={i} className="text-[7px] text-gold-500 text-center" style={{ width: i === 0 ? "38px" : "50px", marginLeft: i === 0 ? "0" : "0" }}>{label}</span>
                   ))}
                 </div>
               </div>
@@ -316,13 +316,13 @@ export function HomePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-1.5 mb-2">
-                      <Timer size={13} className="text-dark-500" />
-                      <span className="text-[10px] text-dark-400 tracking-wider font-semibold">الوقت المتبقي</span>
+                      <Timer size={15} className="text-gold-500" />
+                      <span className="text-[10px] text-dark-100 tracking-wider font-semibold">الوقت المتبقي</span>
                     </div>
                     <div className="flex items-center gap-1.5 animate-countdown">
                       {countdownParts.map((unit, i) => (
                         <div key={i} className="flex items-center gap-1.5">
-                          {i > 0 && <span className="text-gold-500/30 text-lg font-light">:</span>}
+                          {i > 0 && <span className="text-gold-500 text-lg font-light">:</span>}
                           <div className="countdown-box">
                             <span className="text-2xl lg:text-3xl font-extrabold text-white font-mono tabular-nums">{unit}</span>
                           </div>
@@ -331,7 +331,7 @@ export function HomePage() {
                     </div>
                     <div className="flex gap-6 mt-1.5 pr-1">
                       {countdownLabels.map((label, i) => (
-                        <span key={i} className="text-[8px] text-dark-500 text-center w-[56px]">{label}</span>
+                        <span key={i} className="text-[8px] text-gold-500 text-center w-[56px]">{label}</span>
                       ))}
                     </div>
                   </div>
@@ -517,13 +517,13 @@ export function HomePage() {
       <div className="px-4 sm:px-5 md:px-8 lg:px-10 mb-4 md:mb-6 animate-fade-in-up" style={{ animationDelay: "450ms" }}>
         <div className="card-subtle p-4 sm:p-6 lg:p-8 text-center relative overflow-hidden max-w-3xl mx-auto">
           <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-gold-500/12 to-transparent" />
-          <Sparkles size={14} className="text-gold-500/10 mx-auto mb-1.5 sm:hidden" />
-          <Sparkles size={20} className="text-gold-500/10 mx-auto mb-2 hidden sm:block" />
+          <Sparkles size={14} className="text-gold-300 mx-auto mb-1.5 sm:hidden" />
+          <Sparkles size={20} className="text-gold-300 mx-auto mb-2 hidden sm:block" />
           <p className="text-gold-300/85 text-sm sm:text-lg lg:text-xl font-[Amiri] leading-[2] px-1 sm:px-4" dir="rtl">
             إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَوْقُوتًا
           </p>
           <div className="divider-gold w-8 sm:w-12 mx-auto my-2 sm:my-3" />
-          <p className="text-dark-500 text-[8px] sm:text-[10px] tracking-wider">سورة النساء • الآية ١٠٣</p>
+          <p className="text-dark-200 text-[8px] sm:text-[10px] tracking-wider">سورة النساء <span className="text-gold-500">•</span> الآية ١٠٣</p>
         </div>
       </div>
 
@@ -534,10 +534,10 @@ export function HomePage() {
         <div className="flex flex-col items-center gap-0.5">
           <div className="flex items-center gap-1.5">
             <div className="w-[6px] h-[6px] rounded-full bg-gradient-to-br from-red-500 to-red-700" />
-            <span className="text-dark-500 text-[7px] sm:text-[9px] tracking-[0.12em]">المملكة المغربية</span>
+            <span className="text-dark-200 text-[7px] sm:text-[9px] tracking-[0.12em]">المملكة المغربية</span>
             <div className="w-[6px] h-[6px] rounded-full bg-gradient-to-br from-green-500 to-green-700" />
           </div>
-          <span className="text-dark-600 text-[6px] sm:text-[8px]">Powered by aladhan.com</span>
+          <span className="text-dark-200 text-[6px] sm:text-[8px]">Powered by : <span className="text-gold-500">Anas Lagziri</span></span>
         </div>
       </div>
 

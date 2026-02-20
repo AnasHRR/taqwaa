@@ -54,7 +54,7 @@ export function Navbar({ activePage, onNavigate }: NavbarProps) {
           </div>
           <div>
             <h1 className="text-2xl font-bold font-[Amiri] text-gradient-gold leading-tight">تقوى</h1>
-            <span className="text-dark-500 text-[9px] tracking-[0.2em] uppercase">Taqwaa</span>
+            <span className="text-dark-200 text-[9px] tracking-[0.2em] uppercase">Taqwaa</span>
           </div>
         </div>
 
@@ -91,10 +91,10 @@ export function Navbar({ activePage, onNavigate }: NavbarProps) {
           <div className="divider-gold mb-4" />
           <div className="flex items-center gap-2 justify-center">
             <div className="w-2 h-2 rounded-full bg-gradient-to-br from-red-500 to-red-700" />
-            <span className="text-dark-500 text-[9px] tracking-[0.12em]">المملكة المغربية</span>
+            <span className="text-dark-200 text-[9px] tracking-[0.12em]">المملكة المغربية</span>
             <div className="w-2 h-2 rounded-full bg-gradient-to-br from-green-500 to-green-700" />
           </div>
-          <p className="text-dark-600 text-[8px] text-center mt-2">Powered by aladhan.com</p>
+          <p className="text-dark-200 text-[8px] text-center mt-2">Powered by : <span className="text-gold-500">Anas Lagziri</span></p>
         </div>
       </aside>
 
