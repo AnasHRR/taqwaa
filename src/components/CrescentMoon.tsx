@@ -1,19 +1,25 @@
 export function CrescentMoon({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      className={className}
+      viewBox="0 0 60 60"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
+    >
       <defs>
-        <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#f0d48a" />
-          <stop offset="50%" stopColor="#e8c162" />
-          <stop offset="100%" stopColor="#d4a843" />
+        <linearGradient id="taqwaaMoonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#E5C766" />
+          <stop offset="55%" stopColor="#C9A227" />
+          <stop offset="100%" stopColor="#9C7A16" />
         </linearGradient>
       </defs>
-      <circle cx="30" cy="30" r="22" fill="url(#moonGrad)" />
-      <circle cx="38" cy="25" r="18" fill="#0a0e1a" />
-      {/* Star */}
-      <polygon 
-        points="48,18 49.5,22 54,22.5 50.5,25 51.5,29.5 48,27 44.5,29.5 45.5,25 42,22.5 46.5,22" 
-        fill="url(#moonGrad)" 
+      {/* crescent */}
+      <path d="M30 6a16 16 0 0 0 24 24A24 24 0 1 1 30 6Z" fill="url(#taqwaaMoonGrad)" />
+      {/* star */}
+      <polygon
+        points="46,34 47.6,38.4 52,40 47.6,41.6 46,46 44.4,41.6 40,40 44.4,38.4"
+        fill="#E5C766"
       />
     </svg>
   );

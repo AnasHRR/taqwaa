@@ -1,14 +1,17 @@
 import { useState } from "react";
 import {
-  Compass, Droplets, ClipboardList, Moon, Sun, CloudSun, Sunset, Stars,
-  ArrowRight, Clock, Gem, ChevronLeft, Hand, Ear, Footprints, SmilePlus
+  ArrowRight, ClipboardList, Clock, CloudSun, Compass, Droplets,
+  Ear, Footprints, Gem, Hand, Moon, SmilePlus, Stars, Sun, Sunset,
 } from "lucide-react";
+import type { ReactNode } from "react";
+import { PrayerTimesPanel } from "../components/PrayerTimesPanel";
+import { cn } from "../utils/cn";
 
 interface PrayerGuide {
   id: string;
   nameAr: string;
   nameEn: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   rakaat: number;
   sunnahBefore: number;
   sunnahAfter: number;
@@ -20,7 +23,7 @@ interface PrayerGuide {
 
 const PRAYER_GUIDES: PrayerGuide[] = [
   {
-    id: "fajr", nameAr: "صلاة الفجر", nameEn: "Fajr", icon: <Moon size={28} strokeWidth={1.8} />,
+    id: "fajr", nameAr: "صلاة الفجر", nameEn: "Fajr", icon: <Moon size={26} strokeWidth={1.8} />,
     rakaat: 2, sunnahBefore: 2, sunnahAfter: 0,
     description: "أولى الصلوات الخمس، تؤدى قبل شروق الشمس",
     steps: ["النية والتكبير", "دعاء الاستفتاح", "الفاتحة + سورة", "الركوع", "الرفع من الركوع", "السجود الأول", "الجلوس بين السجدتين", "السجود الثاني", "الركعة الثانية", "التشهد والسلام"],
@@ -28,7 +31,7 @@ const PRAYER_GUIDES: PrayerGuide[] = [
     time: "من طلوع الفجر إلى شروق الشمس",
   },
   {
-    id: "dhuhr", nameAr: "صلاة الظهر", nameEn: "Dhuhr", icon: <Sun size={28} strokeWidth={1.8} />,
+    id: "dhuhr", nameAr: "صلاة الظهر", nameEn: "Dhuhr", icon: <Sun size={26} strokeWidth={1.8} />,
     rakaat: 4, sunnahBefore: 4, sunnahAfter: 2,
     description: "الصلاة الثانية، بعد زوال الشمس",
     steps: ["النية والتكبير", "الفاتحة + سورة (جهرًا)", "الركوع والسجود", "التشهد الأول", "الفاتحة فقط في الثالثة والرابعة", "التشهد الأخير", "الصلاة الإبراهيمية", "التسليم"],
@@ -36,7 +39,7 @@ const PRAYER_GUIDES: PrayerGuide[] = [
     time: "من زوال الشمس إلى صلاة العصر",
   },
   {
-    id: "asr", nameAr: "صلاة العصر", nameEn: "Asr", icon: <CloudSun size={28} strokeWidth={1.8} />,
+    id: "asr", nameAr: "صلاة العصر", nameEn: "Asr", icon: <CloudSun size={26} strokeWidth={1.8} />,
     rakaat: 4, sunnahBefore: 0, sunnahAfter: 0,
     description: "الصلاة الوسطى التي أمر الله بالمحافظة عليها",
     steps: ["النية والتكبير", "الفاتحة + سورة", "الركوع والسجود", "التشهد الأول", "الركعتان الأخيرتان", "التشهد والسلام"],
@@ -44,7 +47,7 @@ const PRAYER_GUIDES: PrayerGuide[] = [
     time: "من العصر إلى غروب الشمس",
   },
   {
-    id: "maghrib", nameAr: "صلاة المغرب", nameEn: "Maghrib", icon: <Sunset size={28} strokeWidth={1.8} />,
+    id: "maghrib", nameAr: "صلاة المغرب", nameEn: "Maghrib", icon: <Sunset size={26} strokeWidth={1.8} />,
     rakaat: 3, sunnahBefore: 0, sunnahAfter: 2,
     description: "تؤدى بعد غروب الشمس، ثلاث ركعات",
     steps: ["النية والتكبير", "الفاتحة + سورة جهرًا", "الركوع والسجود", "التشهد الأول", "الركعة الثالثة سرًا", "التشهد والسلام"],
@@ -52,7 +55,7 @@ const PRAYER_GUIDES: PrayerGuide[] = [
     time: "من غروب الشمس إلى مغيب الشفق",
   },
   {
-    id: "isha", nameAr: "صلاة العشاء", nameEn: "Isha", icon: <Stars size={28} strokeWidth={1.8} />,
+    id: "isha", nameAr: "صلاة العشاء", nameEn: "Isha", icon: <Stars size={26} strokeWidth={1.8} />,
     rakaat: 4, sunnahBefore: 0, sunnahAfter: 2,
     description: "آخر الصلوات الخمس المفروضة",
     steps: ["النية والتكبير", "الفاتحة + سورة جهرًا", "الركوع والسجود", "التشهد الأول", "الركعتان سرًا", "التشهد والسلام"],
@@ -83,233 +86,254 @@ const CONDITIONS = [
 
 const PILLARS = ["القيام", "التكبير", "قراءة الفاتحة", "الركوع", "السجود", "التشهد الأخير", "الجلوس بين السجدتين", "التسليم"];
 
+type Tab = "prayers" | "wudu" | "conditions";
+
 export function SalaatPage() {
   const [selectedPrayer, setSelectedPrayer] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<"prayers" | "wudu" | "conditions">("prayers");
+  const [activeTab, setActiveTab] = useState<Tab>("prayers");
 
   const guide = PRAYER_GUIDES.find((p) => p.id === selectedPrayer);
 
   return (
     <div className="animate-page-enter">
-      {/* Header */}
-      <div className="px-5 md:px-8 lg:px-10 pt-5 md:pt-8 pb-4">
-        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-6">
-          <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-[18px] bg-gradient-to-br from-gold-500/12 to-gold-600/4 flex items-center justify-center border border-gold-500/8 mb-3 md:mb-0">
-            <Compass size={28} className="text-gold-400" strokeWidth={1.8} />
+      <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8">
+        {/* ===== Page header ===== */}
+        <header className="flex flex-col items-center gap-5 text-center md:flex-row md:text-start">
+          <span className="octagram octagram-solid h-16 w-16 shrink-0 text-white shadow-[0_12px_30px_-12px_rgba(201,162,39,0.7)]" aria-hidden="true">
+            <Compass size={26} strokeWidth={1.7} />
+          </span>
+          <div>
+            <h1 className="font-quran text-3xl font-bold leading-tight text-gradient-gold lg:text-4xl">مواقيت الصلاة</h1>
+            <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-ink-500">
+              Prayer Times · مواقيت المغرب ودليل الصلاة
+            </p>
           </div>
-          <div className="text-center md:text-left">
-            <h1 className="text-3xl lg:text-4xl font-bold font-[Amiri] text-gradient-gold mb-0.5">الصلاة</h1>
-            <p className="text-dark-400 text-[11px] lg:text-xs">Prayer Guide • دليل الصلاة الشامل</p>
-          </div>
-        </div>
-      </div>
+        </header>
 
-      <div className="px-5 md:px-8 lg:px-10 pb-6">
-        {/* Tab chips */}
-        <div className="flex gap-2.5 mb-5">
-          {[
-            { id: "prayers" as const, label: "الصلوات", icon: <Compass size={14} /> },
-            { id: "wudu" as const, label: "الوضوء", icon: <Droplets size={14} /> },
-            { id: "conditions" as const, label: "الشروط", icon: <ClipboardList size={14} /> },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => { setActiveTab(tab.id); setSelectedPrayer(null); }}
-              className={`chip flex-1 justify-center ${activeTab === tab.id ? "chip-active" : "chip-inactive"}`}
-            >
-              {tab.icon}
-              <span>{tab.label}</span>
-            </button>
-          ))}
+        {/* ===== Live prayer times ===== */}
+        <div className="mt-8">
+          <PrayerTimesPanel variant="full" />
         </div>
 
-        {/* Prayers list */}
-        {activeTab === "prayers" && !selectedPrayer && (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2.5">
-            {PRAYER_GUIDES.map((prayer, idx) => (
+        {/* ===== Verse note ===== */}
+        <p className="mt-6 text-center font-quran text-base leading-loose text-gold-700 sm:text-lg" dir="rtl" lang="ar">
+          إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَوْقُوتًا
+          <span className="mx-2 text-ink-300">—</span>
+          <span className="font-arabic text-xs font-bold text-ink-500">النساء ١٠٣</span>
+        </p>
+
+        {/* ===== Guide section ===== */}
+        <section className="pt-14 sm:pt-16" aria-labelledby="guide-heading">
+          <h2 id="guide-heading" className="text-center text-xs font-extrabold uppercase tracking-[0.28em] text-gold-700">
+            Prayer Guide
+          </h2>
+          <p className="mt-2 text-center font-quran text-2xl font-bold text-ink-900" dir="rtl">دليل الصلاة والوضوء</p>
+
+          {/* Tabs */}
+          <div className="mt-6 flex justify-center gap-2 overflow-x-auto pb-1 no-scrollbar" role="tablist" aria-label="أقسام الدليل">
+            {([
+              { id: "prayers" as const, labelAr: "الصلوات", icon: <Compass size={14} /> },
+              { id: "wudu" as const, labelAr: "الوضوء", icon: <Droplets size={14} /> },
+              { id: "conditions" as const, labelAr: "الشروط", icon: <ClipboardList size={14} /> },
+            ]).map((tab) => (
               <button
-                key={prayer.id}
-                onClick={() => setSelectedPrayer(prayer.id)}
-                className="w-full card px-4 py-4 flex items-center justify-between touch-active cursor-pointer animate-fade-in-up hover:border-gold-500/8"
-                style={{ animationDelay: `${idx * 70}ms` }}
-                dir="rtl"
+                key={tab.id}
+                role="tab"
+                aria-selected={activeTab === tab.id}
+                onClick={() => { setActiveTab(tab.id); setSelectedPrayer(null); }}
+                className={`chip ${activeTab === tab.id ? "chip-active" : ""}`}
               >
-                <div className="flex items-center gap-3.5">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-gold-500/10 to-gold-600/4 flex items-center justify-center border border-gold-500/6 text-gold-400">
-                    {prayer.icon}
-                  </div>
-                  <div className="text-right">
-                    <span className="block text-white font-bold font-[Amiri] text-[16px]">{prayer.nameAr}</span>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-dark-400 text-[10px]">{prayer.nameEn}</span>
-                      <span className="text-dark-600">•</span>
-                      <span className="text-gold-400/60 text-[10px] font-bold">{prayer.rakaat} ركعات</span>
-                    </div>
-                  </div>
-                </div>
-                <ChevronLeft size={16} className="text-dark-600" />
+                {tab.icon}
+                {tab.labelAr}
               </button>
             ))}
           </div>
-        )}
 
-        {/* Prayer detail */}
-        {activeTab === "prayers" && guide && (
-          <div className="animate-fade-in-up max-w-3xl">
-            <button
-              onClick={() => setSelectedPrayer(null)}
-              className="flex items-center gap-2 mb-4 touch-active cursor-pointer group"
-            >
-              <div className="w-9 h-9 rounded-xl bg-dark-800 flex items-center justify-center border border-dark-700/40 group-hover:border-gold-500/15 transition-colors">
-                <ArrowRight size={16} className="text-gold-400" />
-              </div>
-              <span className="text-gold-400 text-sm font-semibold">العودة</span>
-            </button>
+          {/* ---- Prayers list ---- */}
+          {activeTab === "prayers" && !selectedPrayer && (
+            <div className="mt-6 grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
+              {PRAYER_GUIDES.map((prayer, idx) => (
+                <button
+                  key={prayer.id}
+                  onClick={() => setSelectedPrayer(prayer.id)}
+                  className="card card-hover group flex w-full cursor-pointer items-center justify-between px-4 py-4 animate-fade-in-up sm:px-5"
+                  style={{ animationDelay: `${idx * 60}ms` }}
+                  aria-label={`${prayer.nameEn} — ${prayer.rakaat} ركعات`}
+                >
+                  <span className="flex items-center gap-3.5">
+                    <span className="octagram h-13 w-13 p-3 text-gold-700 transition-transform duration-300 group-hover:scale-105" aria-hidden="true">
+                      {prayer.icon}
+                    </span>
+                    <span className="text-start">
+                      <span className="block font-quran text-lg font-bold text-ink-900">{prayer.nameAr}</span>
+                      <span className="mt-0.5 block text-[11px] font-semibold text-ink-500">
+                        {prayer.nameEn}
+                        <span className="mx-1.5 text-ink-300">•</span>
+                        <span className="font-arabic font-bold text-gold-700">{prayer.rakaat} ركعات</span>
+                      </span>
+                    </span>
+                  </span>
+                  <ArrowRight size={15} className="shrink-0 rotate-180 text-ink-300 transition-transform duration-300 group-hover:-translate-x-1 group-hover:text-gold-600 rtl:rotate-0 rtl:group-hover:translate-x-1" aria-hidden="true" />
+                </button>
+              ))}
+            </div>
+          )}
 
-            {/* Header */}
-            <div className="card-elevated p-5 lg:p-6 mb-4 text-center border border-gold-500/6">
-              <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-gold-500/12 to-gold-600/4 flex items-center justify-center border border-gold-500/8 text-gold-400 mb-3">
-                {guide.icon}
-              </div>
-              <h2 className="text-2xl lg:text-3xl font-bold font-[Amiri] text-gradient-gold mb-1">{guide.nameAr}</h2>
-              <p className="text-dark-300 text-xs mb-3">{guide.description}</p>
-              <div className="flex items-center justify-center gap-3">
-                <div className="card-subtle rounded-2xl px-4 py-2 text-center">
-                  <span className="block text-gold-400 text-lg font-bold">{guide.rakaat}</span>
-                  <span className="block text-dark-500 text-[8px]">ركعات</span>
+          {/* ---- Prayer detail ---- */}
+          {activeTab === "prayers" && guide && (
+            <div className="mt-6 max-w-3xl animate-fade-in-up">
+              <button
+                onClick={() => setSelectedPrayer(null)}
+                className="group mb-4 flex cursor-pointer items-center gap-2.5"
+                aria-label="العودة إلى قائمة الصلوات"
+              >
+                <span className="icon-btn h-10 w-10 group-hover:border-gold-500/50">
+                  <ArrowRight size={16} />
+                </span>
+                <span className="font-arabic text-sm font-bold text-gold-700">العودة</span>
+              </button>
+
+              <div className="card-beige relative overflow-hidden p-6 text-center sm:p-8">
+                <div className="gold-hairline absolute inset-x-0 top-0 h-px" aria-hidden="true" />
+                <span className="octagram octagram-solid mx-auto h-16 w-16 text-white" aria-hidden="true">
+                  {guide.icon}
+                </span>
+                <h3 className="mt-4 font-quran text-3xl font-bold text-gradient-gold">{guide.nameAr}</h3>
+                <p className="mt-1 font-arabic text-sm text-ink-600" dir="rtl">{guide.description}</p>
+                <div className="mt-5 flex items-center justify-center gap-3">
+                  <StatBox value={guide.rakaat} labelAr="ركعات" highlight />
+                  {guide.sunnahBefore > 0 && <StatBox value={guide.sunnahBefore} labelAr="سنة قبلية" />}
+                  {guide.sunnahAfter > 0 && <StatBox value={guide.sunnahAfter} labelAr="سنة بعدية" />}
                 </div>
-                {guide.sunnahBefore > 0 && (
-                  <div className="card-subtle rounded-2xl px-4 py-2 text-center">
-                    <span className="block text-accent-teal text-lg font-bold">{guide.sunnahBefore}</span>
-                    <span className="block text-dark-500 text-[8px]">سنة قبلية</span>
-                  </div>
-                )}
-                {guide.sunnahAfter > 0 && (
-                  <div className="card-subtle rounded-2xl px-4 py-2 text-center">
-                    <span className="block text-accent-teal text-lg font-bold">{guide.sunnahAfter}</span>
-                    <span className="block text-dark-500 text-[8px]">سنة بعدية</span>
-                  </div>
-                )}
+              </div>
+
+              <div className="card mt-4 flex items-center gap-3 px-4 py-3.5" dir="rtl">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold-50 text-gold-700 border border-gold-500/20" aria-hidden="true">
+                  <Clock size={19} />
+                </span>
+                <div>
+                  <span className="block font-arabic text-[10px] font-extrabold tracking-wide text-gold-700">وقت الصلاة</span>
+                  <span className="block font-arabic text-sm font-semibold text-ink-800">{guide.time}</span>
+                </div>
+              </div>
+
+              <div className="card mt-4 p-5 sm:p-6">
+                <h4 className="mb-4 text-right font-arabic text-base font-bold text-ink-900" dir="rtl">كيفية الصلاة</h4>
+                <ol className="space-y-3" dir="rtl">
+                  {guide.steps.map((step, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <span className="octagram mt-0.5 h-7 w-7 shrink-0" aria-hidden="true">
+                        <span className="font-arabic text-[10px] font-bold text-gold-700">{idx + 1}</span>
+                      </span>
+                      <p className="pt-1 font-arabic text-sm leading-relaxed text-ink-700">{step}</p>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              <div className="card-beige relative mt-4 overflow-hidden p-5 text-center">
+                <Gem size={18} className="mx-auto mb-2 text-gold-600" aria-hidden="true" />
+                <p className="font-arabic text-sm leading-relaxed text-ink-700" dir="rtl">{guide.virtues}</p>
               </div>
             </div>
+          )}
 
-            {/* Time */}
-            <div className="card px-4 py-3.5 mb-4 flex items-center gap-3" dir="rtl">
-              <div className="w-10 h-10 rounded-xl bg-gold-500/6 flex items-center justify-center text-gold-400">
-                <Clock size={20} />
+          {/* ---- Wudu ---- */}
+          {activeTab === "wudu" && (
+            <div className="mt-6 max-w-3xl animate-fade-in-up">
+              <div className="card-dark relative overflow-hidden p-6 text-center sm:p-8">
+                <span className="octagram mx-auto flex h-14 w-14 bg-white/10 text-gold-300" aria-hidden="true">
+                  <Droplets size={26} strokeWidth={1.8} />
+                </span>
+                <h3 className="mt-4 font-quran text-3xl font-bold text-gradient-gold-light" dir="rtl">الوضوء</h3>
+                <p className="mt-1 font-arabic text-sm text-white/60" dir="rtl">خطوات الوضوء الصحيح</p>
               </div>
-              <div>
-                <span className="block text-gold-400 text-[10px] font-bold">وقت الصلاة</span>
-                <span className="block text-dark-200 text-sm">{guide.time}</span>
+
+              <ol className="mt-4 grid grid-cols-1 gap-2.5 md:grid-cols-2">
+                {WUDU_STEPS.map((item, idx) => (
+                  <li
+                    key={item.step}
+                    className="card card-hover flex items-center gap-3.5 px-4 py-3.5 animate-fade-in-up"
+                    style={{ animationDelay: `${idx * 45}ms` }}
+                    dir="rtl"
+                  >
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-gold-500/25 bg-gradient-to-br from-gold-100 to-gold-50 text-gold-700" aria-hidden="true">
+                      {item.icon}
+                    </span>
+                    <span className="flex-1">
+                      <span className="block font-arabic text-sm font-bold text-ink-900">{item.title}</span>
+                      <span className="mt-0.5 block font-arabic text-[11px] text-ink-500">{item.desc}</span>
+                    </span>
+                    <span className="octagram h-8 w-8 shrink-0" aria-hidden="true">
+                      <span className="font-arabic text-[10px] font-bold text-gold-700">{item.step}</span>
+                    </span>
+                  </li>
+                ))}
+              </ol>
+
+              <div className="card-beige relative mt-5 overflow-hidden p-5 text-center">
+                <span className="font-arabic text-[9px] font-extrabold tracking-widest text-gold-700" dir="rtl">دعاء بعد الوضوء</span>
+                <p className="mt-2 font-quran text-base leading-[2.2] text-ink-800 sm:text-lg" dir="rtl" lang="ar">
+                  أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ
+                </p>
               </div>
             </div>
+          )}
 
-            {/* Steps */}
-            <div className="card p-5 lg:p-6 mb-4">
-              <h3 className="text-gold-400 font-[Amiri] text-base font-bold mb-4 text-right">كيفية الصلاة</h3>
-              <div className="space-y-3" dir="rtl">
-                {guide.steps.map((step, idx) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-gold-500/12 to-gold-600/6 flex items-center justify-center flex-shrink-0 border border-gold-500/8 mt-0.5">
-                      <span className="text-gold-400 text-[10px] font-bold">{idx + 1}</span>
+          {/* ---- Conditions ---- */}
+          {activeTab === "conditions" && (
+            <div className="mt-6 max-w-3xl animate-fade-in-up">
+              <div className="card-dark relative overflow-hidden p-6 text-center sm:p-8">
+                <span className="octagram mx-auto flex h-14 w-14 bg-white/10 text-gold-300" aria-hidden="true">
+                  <ClipboardList size={26} strokeWidth={1.8} />
+                </span>
+                <h3 className="mt-4 font-quran text-3xl font-bold text-gradient-gold-light" dir="rtl">شروط الصلاة</h3>
+                <p className="mt-1 font-arabic text-sm text-white/60" dir="rtl">الواجب توفرها لصحة الصلاة</p>
+              </div>
+
+              <div className="mt-4 grid grid-cols-1 gap-2.5 md:grid-cols-2">
+                {CONDITIONS.map((c, idx) => (
+                  <div key={idx} className="card card-hover flex items-center gap-3.5 px-4 py-3.5 animate-fade-in-up" style={{ animationDelay: `${idx * 55}ms` }} dir="rtl">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-gold-500/25 bg-gradient-to-br from-gold-100 to-gold-50 text-gold-700" aria-hidden="true">
+                      {c.icon}
+                    </span>
+                    <div>
+                      <span className="block font-arabic text-sm font-bold text-ink-900">{c.title}</span>
+                      <span className="mt-0.5 block font-arabic text-[11px] text-ink-500">{c.desc}</span>
                     </div>
-                    <p className="text-dark-200 text-sm leading-relaxed pt-0.5">{step}</p>
                   </div>
                 ))}
               </div>
-            </div>
 
-            {/* Virtue */}
-            <div className="card-subtle p-5 text-center border border-gold-500/4">
-              <Gem size={20} className="text-gold-400/40 mx-auto mb-2" />
-              <p className="text-gold-300/75 text-sm font-[Amiri] leading-relaxed px-2" dir="rtl">{guide.virtues}</p>
-            </div>
-          </div>
-        )}
-
-        {/* Wudu */}
-        {activeTab === "wudu" && (
-          <div className="animate-fade-in-up max-w-3xl">
-            <div className="card-elevated p-5 lg:p-6 mb-5 text-center border border-accent-teal/6">
-              <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-accent-teal/12 to-accent-teal/4 flex items-center justify-center border border-accent-teal/8 text-accent-teal mb-3">
-                <Droplets size={28} strokeWidth={1.8} />
+              <div className="mt-8 flex items-center gap-3">
+                <span className="divider-gold flex-1" aria-hidden="true" />
+                <h4 className="font-arabic text-sm font-bold text-gold-700" dir="rtl">أركان الصلاة</h4>
+                <span className="divider-gold flex-1" aria-hidden="true" />
               </div>
-              <h2 className="text-2xl lg:text-3xl font-bold font-[Amiri] text-gradient-gold mb-0.5">الوضوء</h2>
-              <p className="text-dark-400 text-xs">خطوات الوضوء الصحيح</p>
+              <ul className="mt-4 grid grid-cols-2 gap-2.5 md:grid-cols-4">
+                {PILLARS.map((p, idx) => (
+                  <li
+                    key={idx}
+                    className="card-beige flex items-center justify-center px-3 py-3.5 text-center animate-fade-in-up"
+                    style={{ animationDelay: `${idx * 40}ms` }}
+                  >
+                    <span className="font-arabic text-xs font-bold text-ink-800" dir="rtl">{p}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-              {WUDU_STEPS.map((item, idx) => (
-                <div
-                  key={item.step}
-                  className="card px-4 py-3.5 flex items-center gap-3.5 animate-fade-in-up"
-                  style={{ animationDelay: `${idx * 50}ms` }}
-                  dir="rtl"
-                >
-                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-accent-teal/10 to-accent-teal/3 flex items-center justify-center border border-accent-teal/8 text-accent-teal flex-shrink-0">
-                    {item.icon}
-                  </div>
-                  <div className="flex-1">
-                    <span className="block text-white font-bold text-sm">{item.title}</span>
-                    <span className="block text-dark-400 text-[11px] mt-0.5">{item.desc}</span>
-                  </div>
-                  <div className="w-7 h-7 rounded-full bg-dark-800 flex items-center justify-center border border-dark-700/40">
-                    <span className="text-accent-teal text-[10px] font-bold">{item.step}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="card-subtle p-5 mt-5 text-center border border-gold-500/4">
-              <span className="text-dark-500 text-[9px] tracking-wider font-bold mb-2 block">دعاء بعد الوضوء</span>
-              <p className="text-gold-300/75 text-base font-[Amiri] leading-[2.2]" dir="rtl">
-                أَشْهَدُ أَنْ لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* Conditions */}
-        {activeTab === "conditions" && (
-          <div className="animate-fade-in-up max-w-3xl">
-            <div className="card-elevated p-5 lg:p-6 mb-5 text-center border border-gold-500/6">
-              <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-gold-500/12 to-gold-600/4 flex items-center justify-center border border-gold-500/8 text-gold-400 mb-3">
-                <ClipboardList size={28} strokeWidth={1.8} />
-              </div>
-              <h2 className="text-2xl lg:text-3xl font-bold font-[Amiri] text-gradient-gold mb-0.5">شروط الصلاة</h2>
-              <p className="text-dark-400 text-xs">الواجب توفرها لصحة الصلاة</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 mb-6">
-              {CONDITIONS.map((c, idx) => (
-                <div key={idx} className="card px-4 py-3.5 flex items-center gap-3.5 animate-fade-in-up" style={{ animationDelay: `${idx * 60}ms` }} dir="rtl">
-                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-gold-500/10 to-gold-600/4 flex items-center justify-center border border-gold-500/6 text-gold-400 flex-shrink-0">
-                    {c.icon}
-                  </div>
-                  <div>
-                    <span className="block text-white font-bold text-sm">{c.title}</span>
-                    <span className="block text-dark-400 text-[11px] mt-0.5">{c.desc}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Pillars */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex-1 divider-gold" />
-              <h3 className="text-gold-400 font-[Amiri] text-sm font-bold">أركان الصلاة</h3>
-              <div className="flex-1 divider-gold" />
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
-              {PILLARS.map((p, idx) => (
-                <div key={idx} className="card-subtle rounded-2xl px-3 py-3 text-center animate-fade-in-up" style={{ animationDelay: `${idx * 40 + 300}ms` }}>
-                  <span className="text-dark-200 text-xs font-semibold">{p}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+          )}
+        </section>
       </div>
+    </div>
+  );
+}
+
+function StatBox({ value, labelAr, highlight = false }: { value: number; labelAr: string; highlight?: boolean }) {
+  return (
+    <div className={cn("rounded-2xl border px-4 py-2.5 text-center", highlight ? "border-gold-500/35 bg-white shadow-[0_6px_18px_-10px_rgba(201,162,39,0.5)]" : "border-ink-200 bg-white/70")}>
+      <span className={cn("block text-lg font-extrabold", highlight ? "text-gold-600" : "text-ink-800")}>{value}</span>
+      <span className="block font-arabic text-[9px] font-bold text-ink-500">{labelAr}</span>
     </div>
   );
 }

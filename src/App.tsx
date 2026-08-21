@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { Moon, Star } from "lucide-react";
-import { Navbar, type Page } from "./components/Navbar";
+import { Header, type Page } from "./components/Header";
+import { Footer } from "./components/Footer";
+import { CrescentMoon } from "./components/CrescentMoon";
 import { HomePage } from "./pages/HomePage";
 import { QuranPage } from "./pages/QuranPage";
 import { SalaatPage } from "./pages/SalaatPage";
 import { DuaPage } from "./pages/DuaPage";
+import { AboutPage } from "./pages/AboutPage";
 
 function SplashScreen({ onFinish }: { onFinish: () => void }) {
   const [exiting, setExiting] = useState(false);
@@ -12,36 +14,35 @@ function SplashScreen({ onFinish }: { onFinish: () => void }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setExiting(true);
-      setTimeout(onFinish, 600);
-    }, 2000);
+      setTimeout(onFinish, 550);
+    }, 1700);
     return () => clearTimeout(timer);
   }, [onFinish]);
 
   return (
-    <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-dark-950 ${exiting ? "splash-exit" : ""}`}>
-      <div className="absolute inset-0 bg-ambient pointer-events-none" />
-      <div className="absolute inset-0 bg-stars pointer-events-none opacity-60" />
-
-      <div className="relative animate-bounce-in">
-        <div className="w-28 h-28 rounded-[32px] bg-gradient-to-br from-gold-600/15 to-gold-700/5 flex items-center justify-center border border-gold-500/10 shadow-2xl shadow-gold-500/10">
-          <Moon size={52} className="text-gold-400" strokeWidth={1.5} />
-        </div>
-        <Star size={14} className="text-gold-400 absolute -top-2 -right-2 animate-pulse-soft" fill="currentColor" />
+    <div
+      className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white ${exiting ? "splash-exit" : ""}`}
+      role="status"
+      aria-label="Taqwaa is loading"
+    >
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 55% 40% at 50% 30%, rgba(201,162,39,0.10) 0%, transparent 65%)",
+        }}
+        aria-hidden="true"
+      />
+      <div className="animate-bounce-in">
+        <CrescentMoon className="h-24 w-24 drop-shadow-[0_16px_36px_rgba(201,162,39,0.45)]" />
       </div>
-
-      <h1 className="text-5xl font-bold font-[Amiri] text-gradient-gold mt-6 animate-fade-in" style={{ animationDelay: "300ms" }}>
+      <h1 className="font-quran mt-6 text-5xl font-bold text-gradient-gold animate-fade-in" style={{ animationDelay: "250ms" }}>
         تقوى
       </h1>
-      <p className="text-dark-300 text-sm mt-2 tracking-[0.3em] uppercase animate-fade-in" style={{ animationDelay: "500ms" }}>
+      <p className="mt-2 text-xs font-extrabold tracking-[0.4em] text-gold-700 uppercase animate-fade-in" style={{ animationDelay: "400ms" }}>
         Taqwaa
       </p>
-      <p className="text-dark-400 text-xs mt-1 animate-fade-in" style={{ animationDelay: "700ms" }}>
-        مواقيت الصلاة بالمغرب
-      </p>
-
-      <div className="mt-10 animate-fade-in" style={{ animationDelay: "900ms" }}>
-        <div className="w-8 h-8 border-2 border-gold-500/20 border-t-gold-400 rounded-full animate-spin" />
-      </div>
+      <div className="mt-9 h-8 w-8 animate-spin rounded-full border-2 border-gold-200 border-t-gold-500" style={{ animationDelay: "100ms" }} aria-hidden="true" />
     </div>
   );
 }
@@ -55,44 +56,35 @@ export function App() {
     if (page !== activePage) {
       setActivePage(page);
       setPageKey((k) => k + 1);
+      window.scrollTo({ top: 0, behavior: "auto" });
     }
   };
 
   const renderPage = () => {
     switch (activePage) {
-      case "home": return <HomePage />;
+      case "home": return <HomePage onNavigate={handleNavigate} />;
       case "quran": return <QuranPage />;
       case "salaat": return <SalaatPage />;
       case "dua": return <DuaPage />;
-      default: return <HomePage />;
+      case "about": return <AboutPage onNavigate={handleNavigate} />;
+      default: return <HomePage onNavigate={handleNavigate} />;
     }
   };
 
   return (
-    <div className="min-h-[100dvh] bg-dark-950 bg-app relative">
+    <div className="relative min-h-[100dvh]">
+      {/* Ambient background */}
+      <div className="bg-app-canvas pointer-events-none fixed inset-0" aria-hidden="true" />
+
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
 
-      {/* Background layers */}
-      <div className="fixed inset-0 bg-ambient pointer-events-none" />
-      <div className="fixed inset-0 bg-stars pointer-events-none opacity-30" />
+      <Header activePage={activePage} onNavigate={handleNavigate} />
 
-      {/* Navigation */}
-      <Navbar activePage={activePage} onNavigate={handleNavigate} />
-
-      {/* Main content area — responsive offsets */}
-      <main
-        key={pageKey}
-        className="
-          relative z-10 animate-page-enter
-          pb-[72px] md:pb-0
-          md:pt-16 lg:pt-0
-          lg:pl-[240px]
-        "
-      >
-        <div className="max-w-6xl mx-auto">
-          {renderPage()}
-        </div>
+      <main key={pageKey} className="relative z-10 min-h-[70dvh] pt-[72px]">
+        {renderPage()}
       </main>
+
+      <Footer onNavigate={handleNavigate} />
     </div>
   );
 }

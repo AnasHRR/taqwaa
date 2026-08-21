@@ -1,21 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Heart, Sunrise, Moon, Compass, Shield, BookOpen,
-  ChevronDown, RotateCcw, Sparkles, BookMarked,
-  ListFilter, CircleDot
+  BookOpen, CircleDot, Compass, Heart, ListFilter, Moon,
+  RotateCcw, Shield, Sparkles, Sunrise,
 } from "lucide-react";
+import type { ReactNode } from "react";
+import { AzkarCard, type DuaItem } from "../components/AzkarCard";
+import { cn } from "../utils/cn";
 
-interface DuaItem {
-  id: number;
-  category: string;
-  catIcon: React.ReactNode;
-  titleAr: string;
-  textAr: string;
-  transliteration: string;
-  reference: string;
-}
-
-const CATEGORIES = [
+const CATEGORIES: { id: string; label: string; icon: ReactNode }[] = [
   { id: "all", label: "الكل", icon: <ListFilter size={13} /> },
   { id: "morning", label: "الصباح", icon: <Sunrise size={13} /> },
   { id: "evening", label: "المساء", icon: <Moon size={13} /> },
@@ -25,121 +17,99 @@ const CATEGORIES = [
 ];
 
 const DUAS: DuaItem[] = [
-  { id: 1, category: "morning", catIcon: <Sunrise size={18} />, titleAr: "دعاء الصباح", textAr: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ", transliteration: "Asbahna wa asbahal mulku lillah...", reference: "صحيح مسلم" },
-  { id: 2, category: "morning", catIcon: <Sunrise size={18} />, titleAr: "سيد الاستغفار", textAr: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ", transliteration: "Allahumma anta rabbi la ilaha illa ant...", reference: "صحيح البخاري" },
-  { id: 3, category: "evening", catIcon: <Moon size={18} />, titleAr: "دعاء المساء", textAr: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ", transliteration: "Amsayna wa amsal mulku lillah...", reference: "صحيح مسلم" },
-  { id: 4, category: "evening", catIcon: <Moon size={18} />, titleAr: "دعاء قبل النوم", textAr: "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا", transliteration: "Bismika Allahumma amutu wa ahya", reference: "صحيح البخاري" },
-  { id: 5, category: "prayer", catIcon: <Compass size={18} />, titleAr: "دعاء الاستفتاح", textAr: "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَىٰ جَدُّكَ، وَلَا إِلَٰهَ غَيْرُكَ", transliteration: "Subhanaka Allahumma wa bihamdik...", reference: "سنن أبي داود" },
-  { id: 6, category: "prayer", catIcon: <Compass size={18} />, titleAr: "دعاء بين السجدتين", textAr: "رَبِّ اغْفِرْ لِي، رَبِّ اغْفِرْ لِي", transliteration: "Rabbighfir li, Rabbighfir li", reference: "سنن ابن ماجه" },
-  { id: 7, category: "prayer", catIcon: <Compass size={18} />, titleAr: "دعاء القنوت", textAr: "اللَّهُمَّ اهْدِنِي فِيمَنْ هَدَيْتَ، وَعَافِنِي فِيمَنْ عَافَيْتَ، وَتَوَلَّنِي فِيمَنْ تَوَلَّيْتَ", transliteration: "Allahumma-hdini fiman hadayt...", reference: "سنن الترمذي" },
-  { id: 8, category: "protection", catIcon: <Shield size={18} />, titleAr: "آية الكرسي", textAr: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ", transliteration: "Allahu la ilaha illa huwal hayyul qayyum...", reference: "البقرة ٢٥٥" },
-  { id: 9, category: "protection", catIcon: <Shield size={18} />, titleAr: "دعاء الخروج", textAr: "بِسْمِ اللَّهِ، تَوَكَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ", transliteration: "Bismillah, tawakkaltu 'alallah...", reference: "سنن الترمذي" },
-  { id: 10, category: "daily", catIcon: <BookOpen size={18} />, titleAr: "دعاء الطعام", textAr: "بِسْمِ اللَّهِ، وَبِبَرَكَةِ اللَّهِ", transliteration: "Bismillah, wa barakatillah", reference: "سنن أبي داود" },
-  { id: 11, category: "daily", catIcon: <BookOpen size={18} />, titleAr: "دعاء بعد الطعام", textAr: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ", transliteration: "Alhamdu lillahil ladhi at'amani...", reference: "سنن الترمذي" },
-  { id: 12, category: "daily", catIcon: <BookOpen size={18} />, titleAr: "دعاء دخول المسجد", textAr: "اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ", transliteration: "Allahummaftah li abwaba rahmatik", reference: "صحيح مسلم" },
-  { id: 13, category: "protection", catIcon: <Shield size={18} />, titleAr: "دعاء الحفظ", textAr: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", transliteration: "Bismillahil ladhi la yadurru...", reference: "سنن الترمذي" },
-  { id: 14, category: "morning", catIcon: <Sunrise size={18} />, titleAr: "التوكل على الله", textAr: "حَسْبِيَ اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ ۖ عَلَيْهِ تَوَكَّلْتُ ۖ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ", transliteration: "Hasbiyallahu la ilaha illa huwa...", reference: "التوبة ١٢٩" },
-  { id: 15, category: "evening", catIcon: <Moon size={18} />, titleAr: "المعوذتان", textAr: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ • مِنْ شَرِّ مَا خَلَقَ • وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ", transliteration: "Qul a'udhu birabbil falaq...", reference: "سورة الفلق" },
+  { id: 1, category: "morning", catIcon: <Sunrise size={18} />, titleAr: "دعاء الصباح", textAr: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ", transliteration: "Asbahna wa asbahal mulku lillah...", textEn: "We have entered a new morning and with it all dominion belongs to Allah. Praise is to Allah — none has the right to be worshipped except Him alone.", reference: "صحيح مسلم" },
+  { id: 2, category: "morning", catIcon: <Sunrise size={18} />, titleAr: "سيد الاستغفار", textAr: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ", transliteration: "Allahumma anta rabbi la ilaha illa ant...", textEn: "O Allah, You are my Lord, there is none worthy of worship but You. You created me and I am Your slave — I keep Your covenant as much as I can.", reference: "صحيح البخاري" },
+  { id: 3, category: "evening", catIcon: <Moon size={18} />, titleAr: "دعاء المساء", textAr: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ", transliteration: "Amsayna wa amsal mulku lillah...", textEn: "We have entered the evening and with it all dominion belongs to Allah. Praise is to Allah — none has the right to be worshipped except Him alone.", reference: "صحيح مسلم" },
+  { id: 4, category: "evening", catIcon: <Moon size={18} />, titleAr: "دعاء قبل النوم", textAr: "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا", transliteration: "Bismika Allahumma amutu wa ahya", textEn: "In Your name, O Allah, I die and I live.", reference: "صحيح البخاري" },
+  { id: 5, category: "prayer", catIcon: <Compass size={18} />, titleAr: "دعاء الاستفتاح", textAr: "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَىٰ جَدُّكَ، وَلَا إِلَٰهَ غَيْرُكَ", transliteration: "Subhanaka Allahumma wa bihamdik...", textEn: "Glory is to You O Allah, and praise. Blessed is Your name and exalted is Your majesty — there is none worthy of worship but You.", reference: "سنن أبي داود" },
+  { id: 6, category: "prayer", catIcon: <Compass size={18} />, titleAr: "دعاء بين السجدتين", textAr: "رَبِّ اغْفِرْ لِي، رَبِّ اغْفِرْ لِي", transliteration: "Rabbighfir li, Rabbighfir li", textEn: "My Lord, forgive me. My Lord, forgive me.", reference: "سنن ابن ماجه" },
+  { id: 7, category: "prayer", catIcon: <Compass size={18} />, titleAr: "دعاء القنوت", textAr: "اللَّهُمَّ اهْدِنِي فِيمَنْ هَدَيْتَ، وَعَافِنِي فِيمَنْ عَافَيْتَ، وَتَوَلَّنِي فِيمَنْ تَوَلَّيْتَ", transliteration: "Allahumma-hdini fiman hadayt...", textEn: "O Allah, guide me among those You have guided, grant me well-being among those You have granted it, and protect me among those You have protected.", reference: "سنن الترمذي" },
+  { id: 8, category: "protection", catIcon: <Shield size={18} />, titleAr: "آية الكرسي", textAr: "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ", transliteration: "Allahu la ilaha illa huwal hayyul qayyum...", textEn: "Allah — there is no deity except Him, the Ever-Living, the Sustainer of existence. Neither drowsiness overtakes Him nor sleep. To Him belongs whatever is in the heavens and the earth.", reference: "البقرة ٢٥٥" },
+  { id: 9, category: "protection", catIcon: <Shield size={18} />, titleAr: "دعاء الخروج", textAr: "بِسْمِ اللَّهِ، تَوَكَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ", transliteration: "Bismillah, tawakkaltu 'alallah...", textEn: "In the name of Allah, I place my trust in Allah — there is no might nor power except with Allah.", reference: "سنن الترمذي" },
+  { id: 10, category: "daily", catIcon: <BookOpen size={18} />, titleAr: "دعاء الطعام", textAr: "بِسْمِ اللَّهِ، وَبِبَرَكَةِ اللَّهِ", transliteration: "Bismillah, wa barakatillah", textEn: "In the name of Allah and with the blessing of Allah.", reference: "سنن أبي داود" },
+  { id: 11, category: "daily", catIcon: <BookOpen size={18} />, titleAr: "دعاء بعد الطعام", textAr: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ", transliteration: "Alhamdu lillahil ladhi at'amani...", textEn: "Praise be to Allah who fed me this and provided it without any effort or power on my part.", reference: "سنن الترمذي" },
+  { id: 12, category: "daily", catIcon: <BookOpen size={18} />, titleAr: "دعاء دخول المسجد", textAr: "اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ", transliteration: "Allahummaftah li abwaba rahmatik", textEn: "O Allah, open for me the gates of Your mercy.", reference: "صحيح مسلم" },
+  { id: 13, category: "protection", catIcon: <Shield size={18} />, titleAr: "دعاء الحفظ", textAr: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", transliteration: "Bismillahil ladhi la yadurru...", textEn: "In the name of Allah, with whose name nothing on earth or in heaven can cause harm — He is the All-Hearing, All-Knowing.", reference: "سنن الترمذي" },
+  { id: 14, category: "morning", catIcon: <Sunrise size={18} />, titleAr: "التوكل على الله", textAr: "حَسْبِيَ اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ ۖ عَلَيْهِ تَوَكَّلْتُ ۖ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ", transliteration: "Hasbiyallahu la ilaha illa huwa...", textEn: "Allah is sufficient for me — there is no deity except Him. In Him I trust, and He is the Lord of the Mighty Throne.", reference: "التوبة ١٢٩" },
+  { id: 15, category: "evening", catIcon: <Moon size={18} />, titleAr: "المعوذتان", textAr: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ • مِنْ شَرِّ مَا خَلَقَ • وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ", transliteration: "Qul a'udhu birabbil falaq...", textEn: "Say: I seek refuge in the Lord of the daybreak — from the evil of what He created, and from the evil of darkness when it settles.", reference: "سورة الفلق" },
 ];
 
 export function DuaPage() {
   const [activeCat, setActiveCat] = useState("all");
-  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [favorites, setFavorites] = useState<number[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem("taqwaa-favorites") || "[]");
+    } catch {
+      return [];
+    }
+  });
 
-  const filteredDuas = activeCat === "all" ? DUAS : DUAS.filter((d) => d.category === activeCat);
+  useEffect(() => {
+    localStorage.setItem("taqwaa-favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
+  const toggleFavorite = (id: number) =>
+    setFavorites((f) => (f.includes(id) ? f.filter((x) => x !== id) : [...f, id]));
+
+  const filteredDuas = activeCat === "all"
+    ? DUAS
+    : DUAS.filter((d) => d.category === activeCat);
 
   return (
     <div className="animate-page-enter">
-      {/* Header */}
-      <div className="px-5 md:px-8 lg:px-10 pt-5 md:pt-8 pb-4">
-        <div className="flex flex-col items-center md:flex-row md:items-center md:gap-6">
-          <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-[18px] bg-gradient-to-br from-accent-rose/10 to-accent-rose/3 flex items-center justify-center border border-accent-rose/6 mb-3 md:mb-0">
-            <Heart size={28} className="text-accent-rose" strokeWidth={1.8} />
+      <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8">
+        {/* ===== Page header ===== */}
+        <header className="flex flex-col items-center gap-5 text-center md:flex-row md:text-start">
+          <span className="octagram octagram-solid h-16 w-16 shrink-0 text-white shadow-[0_12px_30px_-12px_rgba(201,162,39,0.7)]" aria-hidden="true">
+            <Heart size={26} strokeWidth={1.7} />
+          </span>
+          <div>
+            <h1 className="font-quran text-3xl font-bold leading-tight text-gradient-gold lg:text-4xl">الأذكار والدعاء</h1>
+            <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-ink-500">
+              Azkar & Duas · أدعية مختارة من السنة الصحيحة
+            </p>
           </div>
-          <div className="text-center md:text-left">
-            <h1 className="text-3xl lg:text-4xl font-bold font-[Amiri] text-gradient-gold mb-0.5">الأدعية والأذكار</h1>
-            <p className="text-dark-400 text-[11px] lg:text-xs">Duas & Supplications • أدعية مختارة</p>
-          </div>
-        </div>
-      </div>
+        </header>
 
-      <div className="px-5 md:px-8 lg:px-10 pb-6">
-        {/* Tasbeeh */}
-        <TasbeehCounter />
+        <div className="mt-8">
+          {/* Tasbeeh counter */}
+          <TasbeehCounter />
 
-        {/* Category filter */}
-        <div className="flex gap-2 mb-5 overflow-x-auto pb-1 no-scrollbar">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCat(cat.id)}
-              className={`chip flex-shrink-0 ${activeCat === cat.id ? "chip-active" : "chip-inactive"}`}
-            >
-              {cat.icon}
-              <span>{cat.label}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Duas grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-          {filteredDuas.map((dua, idx) => {
-            const isExpanded = expandedId === dua.id;
-            return (
-              <div
-                key={dua.id}
-                className="card overflow-hidden animate-fade-in-up"
-                style={{ animationDelay: `${idx * 40}ms` }}
+          {/* Category filter */}
+          <div className="mt-8 flex gap-2 overflow-x-auto pb-1 no-scrollbar" role="group" aria-label="تصفية الأذكار">
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCat(cat.id)}
+                aria-pressed={activeCat === cat.id}
+                className={`chip flex-shrink-0 ${activeCat === cat.id ? "chip-active" : ""}`}
               >
-                <button
-                  onClick={() => setExpandedId(isExpanded ? null : dua.id)}
-                  className="w-full px-4 py-3.5 flex items-center justify-between touch-active cursor-pointer"
-                  dir="rtl"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-gold-500/10 to-gold-600/4 flex items-center justify-center border border-gold-500/6 text-gold-400 flex-shrink-0">
-                      {dua.catIcon}
-                    </div>
-                    <div className="text-right">
-                      <span className="block text-white font-bold text-[13px]">{dua.titleAr}</span>
-                      <div className="flex items-center gap-1.5 mt-0.5">
-                        <BookMarked size={10} className="text-dark-500" />
-                        <span className="text-dark-500 text-[10px]">{dua.reference}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <ChevronDown
-                    size={16}
-                    className={`text-dark-500 transition-transform duration-300 flex-shrink-0 ${isExpanded ? "rotate-180" : ""}`}
-                  />
-                </button>
-
-                {isExpanded && (
-                  <div className="px-4 pb-4 animate-slide-down-in">
-                    <div className="h-[1px] bg-gradient-to-r from-transparent via-dark-700/50 to-transparent mb-4" />
-                    <p className="text-gold-200/85 text-lg font-[Amiri] leading-[2.4] text-center mb-3 px-1" dir="rtl">
-                      {dua.textAr}
-                    </p>
-                    <div className="bg-dark-800/50 rounded-2xl px-3 py-2.5 mb-2">
-                      <p className="text-dark-300 text-[10px] italic text-center">{dua.transliteration}</p>
-                    </div>
-                    <div className="flex items-center justify-center gap-1.5 mt-1">
-                      <BookMarked size={10} className="text-dark-600" />
-                      <span className="text-dark-500 text-[10px]">{dua.reference}</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {filteredDuas.length === 0 && (
-          <div className="text-center py-16">
-            <ListFilter size={40} className="text-dark-600 mx-auto mb-3" />
-            <p className="text-dark-500 text-sm">لا توجد أدعية في هذا التصنيف</p>
+                {cat.icon}
+                {cat.label}
+              </button>
+            ))}
           </div>
-        )}
+
+          {/* Duas grid */}
+          <div className="mt-5 grid grid-cols-1 items-start gap-3 md:grid-cols-2">
+            {filteredDuas.map((dua, idx) => (
+              <AzkarCard
+                key={dua.id}
+                dua={dua}
+                index={idx}
+                isFavorite={favorites.includes(dua.id)}
+                onToggleFavorite={toggleFavorite}
+              />
+            ))}
+          </div>
+
+          {filteredDuas.length === 0 && (
+            <div className="card mt-5 flex flex-col items-center py-16 text-center">
+              <ListFilter size={36} className="mb-3 text-ink-300" aria-hidden="true" />
+              <p className="font-arabic text-sm font-bold text-ink-700">لا توجد أدعية في هذا التصنيف</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -161,64 +131,62 @@ function TasbeehCounter() {
   const progress = (displayCount / target) * 100;
 
   return (
-    <div className="card-elevated p-5 lg:p-6 mb-5 relative overflow-hidden border border-gold-500/6 animate-fade-in-up">
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-gold-500/15 to-transparent" />
+    <section className="card-dark relative overflow-hidden p-6 sm:p-8" aria-label="المسبحة الإلكترونية">
+      {/* decorations */}
+      <Sparkles className="pointer-events-none absolute end-6 top-6 text-gold-500/30" size={18} aria-hidden="true" />
 
-      <div className="flex flex-col md:flex-row md:items-center md:gap-8">
-        {/* Header & phrase */}
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-4 md:mb-3" dir="rtl">
-            <div className="flex items-center gap-2">
-              <CircleDot size={16} className="text-gold-400" />
-              <span className="text-gold-400 text-[11px] font-bold tracking-wider">التسبيح</span>
-            </div>
+      <div className="relative flex flex-col gap-7 md:flex-row md:items-center md:gap-10">
+        {/* phrase */}
+        <div className="flex-1 text-center md:text-start">
+          <div className="mb-4 flex items-center justify-between" dir="rtl">
+            <span className="flex items-center gap-2 font-arabic text-xs font-extrabold tracking-widest text-gold-300">
+              <CircleDot size={15} />
+              التسبيح
+            </span>
             <button
               onClick={() => setCount(0)}
-              className="flex items-center gap-1.5 text-dark-500 text-[10px] touch-active cursor-pointer px-3 py-1.5 rounded-xl bg-dark-800/50 border border-dark-700/30 hover:border-dark-600/40 transition-colors"
+              className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-white/15 px-3 py-1.5 font-arabic text-[11px] font-bold text-white/60 transition-colors hover:border-gold-500/40 hover:text-gold-300"
             >
               <RotateCcw size={12} />
               إعادة
             </button>
           </div>
 
-          <div className="text-center md:text-right mb-4 md:mb-0">
-            <p className="text-gold-300 text-2xl lg:text-3xl font-[Amiri] font-bold mb-0.5">{phrase.text}</p>
-            <p className="text-dark-500 text-[10px]">{phrase.sub}</p>
+          <p className="font-quran text-4xl font-bold leading-tight text-gradient-gold-light sm:text-5xl" dir="rtl">
+            {phrase.text}
+          </p>
+          <p className="mt-2 text-xs font-bold uppercase tracking-[0.24em] text-white/45">{phrase.sub}</p>
+
+          {/* phase indicator */}
+          <div className="mt-5 flex items-center justify-center gap-3 md:justify-start" aria-hidden="true">
+            {phrases.map((_, i) => (
+              <span key={i} className={cn("h-1.5 rounded-full transition-all duration-300", i === phraseIdx ? "w-7 bg-gold-400" : "w-1.5 bg-white/20")} />
+            ))}
           </div>
         </div>
 
-        {/* Counter */}
-        <div className="flex flex-col items-center">
+        {/* counter */}
+        <div className="flex flex-col items-center gap-4 self-center">
           <button
             onClick={() => setCount((c) => c + 1)}
-            className="w-[88px] h-[88px] lg:w-[100px] lg:h-[100px] rounded-full bg-gradient-to-br from-gold-500/12 to-gold-600/5 border-2 border-gold-500/15 flex items-center justify-center mb-3 active:scale-90 hover:border-gold-500/25 transition-all duration-200 cursor-pointer shadow-lg shadow-gold-500/5"
+            aria-label={`عدّ التسبيحة — العدد الحالي ${displayCount}`}
+            className="group relative flex h-[104px] w-[104px] cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-gold-300 via-gold-500 to-gold-700 shadow-[0_16px_40px_-14px_rgba(201,162,39,0.9)] transition-transform duration-200 active:scale-90 lg:h-[120px] lg:w-[120px]"
           >
-            <span className="text-3xl lg:text-4xl font-extrabold text-gold-400 font-mono">{displayCount}</span>
+            <span className="absolute inset-[5px] rounded-full border border-dashed border-white/40 transition-transform duration-500 group-hover:rotate-45" aria-hidden="true" />
+            <span className="font-mono text-4xl font-extrabold tabular-nums text-white drop-shadow-sm lg:text-5xl">{displayCount}</span>
           </button>
 
-          <div className="w-full max-w-[160px]">
-            <div className="progress-track mb-2">
+          <div className="w-full max-w-[190px]">
+            <div className="progress-track !bg-white/10 mb-2" role="progressbar" aria-valuenow={displayCount} aria-valuemin={0} aria-valuemax={target}>
               <div className="progress-fill" style={{ width: `${progress}%` }} />
             </div>
-            <div className="flex justify-between text-[9px] text-dark-500 px-0.5">
+            <div className="flex justify-between font-arabic text-[10px] font-semibold text-white/50" dir="rtl">
               <span>المجموع: {count}</span>
               <span>{displayCount}/{target}</span>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Phase indicator */}
-      <div className="flex items-center justify-center gap-3 mt-4">
-        {phrases.map((p, i) => (
-          <div key={i} className="flex items-center gap-1.5">
-            <Sparkles size={8} className={i === phraseIdx ? "text-gold-400" : "text-dark-600"} />
-            <span className={`text-[9px] ${i === phraseIdx ? "text-gold-400 font-bold" : "text-dark-600"}`}>
-              {p.sub}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
+    </section>
   );
 }

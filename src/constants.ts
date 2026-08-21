@@ -35,3 +35,14 @@ export const PRAYER_INFO: Record<string, { nameAr: string; cssClass: string }> =
   Maghrib: { nameAr: "المغرب", cssClass: "prayer-maghrib" },
   Isha: { nameAr: "العشاء", cssClass: "prayer-isha" },
 };
+
+/** A reflection verse for each day of the week (index = Date.getDay()). */
+export const DAILY_VERSES: { text: string; ref: string }[] = [
+  { text: "لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا", ref: "البقرة ٢٨٦" },
+  { text: "وَلَا تَهِنُوا وَلَا تَحْزَنُوا وَأَنتُمُ الْأَعْلَوْنَ إِن كُنتُم مُّؤْمِنِينَ", ref: "آل عمران ١٣٩" },
+  { text: "إِنَّ مَعَ الْعُسْرِ يُسْرًا", ref: "الشرح ٦" },
+  { text: "فَاذْكُرُونِي أَذْكُرْكُمْ وَاشْكُرُوا لِي وَلَا تَكْفُرُونِ", ref: "البقرة ١٥٢" },
+  { text: "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ", ref: "الرعد ٢٨" },
+  { text: "وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ", ref: "الطلاق ٣" },
+  { text: "قُلْ يَا عِبَادِيَ الَّذِينَ أَسْرَفُوا عَلَىٰ أَنفُسِهِمْ لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ", ref: "الزمر ٥٣" },
+];

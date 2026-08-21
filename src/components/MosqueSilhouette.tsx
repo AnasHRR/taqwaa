@@ -1,40 +1,51 @@
-export function MosqueSilhouette({ className }: { className?: string }) {
+interface MosqueSilhouetteProps {
+  className?: string;
+  cutoutColor?: string;
+}
+
+/** Decorative mosque skyline with domes and minarets (single-colour silhouette). */
+export function MosqueSilhouette({
+  className,
+  cutoutColor = "#FAF9F6",
+}: MosqueSilhouetteProps) {
   return (
-    <svg className={className} viewBox="0 0 400 120" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      className={className}
+      viewBox="0 0 480 160"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
+    >
       {/* Left minaret */}
-      <rect x="40" y="30" width="12" height="90" rx="1" />
-      <rect x="38" y="25" width="16" height="8" rx="2" />
-      <polygon points="46,5 38,25 54,25" />
-      <circle cx="46" cy="8" r="3" />
-      
+      <rect x="52" y="42" width="13" height="112" rx="2" />
+      <rect x="49" y="36" width="19" height="9" rx="3" />
+      <path d="M58.5 12 L50 34 L67 34 Z" />
+      <circle cx="58.5" cy="10" r="3.4" />
+      <ellipse cx="58.5" cy="66" rx="3.6" ry="7" fill={cutoutColor} />
+
       {/* Main dome */}
-      <path d="M120,70 Q120,20 200,15 Q280,20 280,70 L280,120 L120,120 Z" opacity="0.8" />
-      
-      {/* Dome crescent */}
-      <circle cx="200" cy="18" r="5" />
-      <circle cx="202" cy="17" r="4" fill="#0a0e1a" />
-      
-      {/* Central tower */}
-      <rect x="190" y="25" width="20" height="95" rx="1" />
-      <rect x="186" y="20" width="28" height="8" rx="3" />
-      
-      {/* Windows */}
-      <ellipse cx="200" cy="55" rx="5" ry="8" fill="#0a0e1a" opacity="0.5" />
-      <ellipse cx="160" cy="80" rx="4" ry="7" fill="#0a0e1a" opacity="0.4" />
-      <ellipse cx="240" cy="80" rx="4" ry="7" fill="#0a0e1a" opacity="0.4" />
-      
-      {/* Right minaret */}
-      <rect x="348" y="30" width="12" height="90" rx="1" />
-      <rect x="346" y="25" width="16" height="8" rx="2" />
-      <polygon points="354,5 346,25 362,25" />
-      <circle cx="354" cy="8" r="3" />
-      
+      <path d="M150 92 Q150 30 240 24 Q330 30 330 92 L330 154 L150 154 Z" opacity="0.9" />
+      <circle cx="240" cy="22" r="5.4" />
+      <path d="M240 8 L241.8 18.2 L252 20 L241.8 21.8 L240 32 L238.2 21.8 L228 20 L238.2 18.2 Z" />
+
+      {/* Drum windows */}
+      <ellipse cx="216" cy="62" rx="5.4" ry="9" fill={cutoutColor} />
+      <ellipse cx="264" cy="62" rx="5.4" ry="9" fill={cutoutColor} />
+
       {/* Side arches */}
-      <path d="M80,120 L80,75 Q80,55 100,55 Q120,55 120,75 L120,120 Z" opacity="0.5" />
-      <path d="M280,120 L280,75 Q280,55 300,55 Q320,55 320,75 L320,120 Z" opacity="0.5" />
-      
+      <path d="M118 154 L118 108 Q118 84 140 84 Q162 84 162 108 L162 154 Z" opacity="0.55" />
+      <path d="M318 154 L318 108 Q318 84 340 84 Q362 84 362 108 L362 154 Z" opacity="0.55" />
+
+      {/* Right minaret */}
+      <rect x="408" y="42" width="13" height="112" rx="2" />
+      <rect x="405" y="36" width="19" height="9" rx="3" />
+      <path d="M414.5 12 L406 34 L423 34 Z" />
+      <circle cx="414.5" cy="10" r="3.4" />
+      <ellipse cx="414.5" cy="66" rx="3.6" ry="7" fill={cutoutColor} />
+
       {/* Base line */}
-      <rect x="30" y="118" width="340" height="2" rx="1" opacity="0.6" />
+      <rect x="36" y="152" width="408" height="3" rx="1.5" opacity="0.65" />
     </svg>
   );
 }
