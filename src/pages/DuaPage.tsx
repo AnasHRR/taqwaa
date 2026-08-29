@@ -57,32 +57,32 @@ export function DuaPage() {
 
   return (
     <div className="animate-page-enter">
-      <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 sm:pt-10 lg:px-8">
+      <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 pt-4 sm:pt-8">
         {/* ===== Page header ===== */}
-        <header className="flex flex-col items-center gap-5 text-center md:flex-row md:text-start">
-          <span className="octagram octagram-solid h-16 w-16 shrink-0 text-white shadow-[0_12px_30px_-12px_rgba(201,162,39,0.7)]" aria-hidden="true">
-            <Heart size={26} strokeWidth={1.7} />
+        <header className="flex flex-col items-center gap-3.5 sm:gap-5 text-center md:flex-row md:text-start">
+          <span className="octagram octagram-solid h-14 w-14 sm:h-16 sm:w-16 shrink-0 text-white shadow-[0_12px_30px_-12px_rgba(201,162,39,0.7)]" aria-hidden="true">
+            <Heart size={24} strokeWidth={1.7} />
           </span>
           <div>
-            <h1 className="font-quran text-3xl font-bold leading-tight text-gradient-gold lg:text-4xl">الأذكار والدعاء</h1>
-            <p className="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-ink-500">
+            <h1 className="font-quran text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight text-gradient-gold">الأذكار والدعاء</h1>
+            <p className="mt-1 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-ink-500">
               Azkar & Duas · أدعية مختارة من السنة الصحيحة
             </p>
           </div>
         </header>
 
-        <div className="mt-8">
+        <div className="mt-6">
           {/* Tasbeeh counter */}
           <TasbeehCounter />
 
           {/* Category filter */}
-          <div className="mt-8 flex gap-2 overflow-x-auto pb-1 no-scrollbar" role="group" aria-label="تصفية الأذكار">
+          <div className="mt-6 flex gap-1.5 overflow-x-auto pb-1 no-scrollbar" role="group" aria-label="تصفية الأذكار">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCat(cat.id)}
                 aria-pressed={activeCat === cat.id}
-                className={`chip flex-shrink-0 ${activeCat === cat.id ? "chip-active" : ""}`}
+                className={cn("chip shrink-0 !py-2 !px-3.5 !text-xs", activeCat === cat.id && "chip-active")}
               >
                 {cat.icon}
                 {cat.label}
@@ -91,7 +91,7 @@ export function DuaPage() {
           </div>
 
           {/* Duas grid */}
-          <div className="mt-5 grid grid-cols-1 items-start gap-3 md:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 items-start gap-2.5 sm:grid-cols-2">
             {filteredDuas.map((dua, idx) => (
               <AzkarCard
                 key={dua.id}
@@ -104,8 +104,8 @@ export function DuaPage() {
           </div>
 
           {filteredDuas.length === 0 && (
-            <div className="card mt-5 flex flex-col items-center py-16 text-center">
-              <ListFilter size={36} className="mb-3 text-ink-300" aria-hidden="true" />
+            <div className="card mt-5 flex flex-col items-center py-12 text-center">
+              <ListFilter size={32} className="mb-2.5 text-ink-300" aria-hidden="true" />
               <p className="font-arabic text-sm font-bold text-ink-700">لا توجد أدعية في هذا التصنيف</p>
             </div>
           )}
@@ -130,57 +130,72 @@ function TasbeehCounter() {
   const displayCount = count % target;
   const progress = (displayCount / target) * 100;
 
-  return (
-    <section className="card-dark relative overflow-hidden p-6 sm:p-8" aria-label="المسبحة الإلكترونية">
-      {/* decorations */}
-      <Sparkles className="pointer-events-none absolute end-6 top-6 text-gold-500/30" size={18} aria-hidden="true" />
+  const handleTap = () => {
+    setCount((c) => c + 1);
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(20);
+    }
+  };
 
-      <div className="relative flex flex-col gap-7 md:flex-row md:items-center md:gap-10">
-        {/* phrase */}
+  return (
+    <section className="card-dark relative overflow-hidden p-5 sm:p-7" aria-label="المسبحة الإلكترونية">
+      {/* Decorations */}
+      <Sparkles className="pointer-events-none absolute end-5 top-5 text-gold-500/30" size={16} aria-hidden="true" />
+
+      <div className="relative flex flex-col gap-5 md:flex-row md:items-center md:gap-8">
+        {/* Phrase info */}
         <div className="flex-1 text-center md:text-start">
-          <div className="mb-4 flex items-center justify-between" dir="rtl">
-            <span className="flex items-center gap-2 font-arabic text-xs font-extrabold tracking-widest text-gold-300">
-              <CircleDot size={15} />
-              التسبيح
+          <div className="mb-3 flex items-center justify-between" dir="rtl">
+            <span className="flex items-center gap-1.5 font-arabic text-xs font-extrabold tracking-widest text-gold-300">
+              <CircleDot size={14} />
+              المسبحة الإلكترونية
             </span>
             <button
               onClick={() => setCount(0)}
-              className="flex cursor-pointer items-center gap-1.5 rounded-xl border border-white/15 px-3 py-1.5 font-arabic text-[11px] font-bold text-white/60 transition-colors hover:border-gold-500/40 hover:text-gold-300"
+              className="flex cursor-pointer items-center gap-1 rounded-xl border border-white/15 px-2.5 py-1 font-arabic text-[10.5px] font-bold text-white/60 transition-colors hover:border-gold-500/40 hover:text-gold-300"
             >
-              <RotateCcw size={12} />
+              <RotateCcw size={11} />
               إعادة
             </button>
           </div>
 
-          <p className="font-quran text-4xl font-bold leading-tight text-gradient-gold-light sm:text-5xl" dir="rtl">
+          <p className="font-quran text-3xl sm:text-4xl font-bold leading-tight text-gradient-gold-light" dir="rtl">
             {phrase.text}
           </p>
-          <p className="mt-2 text-xs font-bold uppercase tracking-[0.24em] text-white/45">{phrase.sub}</p>
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white/45">{phrase.sub}</p>
 
-          {/* phase indicator */}
-          <div className="mt-5 flex items-center justify-center gap-3 md:justify-start" aria-hidden="true">
+          {/* Phase indicator */}
+          <div className="mt-4 flex items-center justify-center gap-2 md:justify-start" aria-hidden="true">
             {phrases.map((_, i) => (
-              <span key={i} className={cn("h-1.5 rounded-full transition-all duration-300", i === phraseIdx ? "w-7 bg-gold-400" : "w-1.5 bg-white/20")} />
+              <span
+                key={i}
+                className={cn(
+                  "h-1.5 rounded-full transition-all duration-300",
+                  i === phraseIdx ? "w-6 bg-gold-400" : "w-1.5 bg-white/20"
+                )}
+              />
             ))}
           </div>
         </div>
 
-        {/* counter */}
-        <div className="flex flex-col items-center gap-4 self-center">
+        {/* Big circular counter button */}
+        <div className="flex flex-col items-center gap-3 self-center">
           <button
-            onClick={() => setCount((c) => c + 1)}
+            onClick={handleTap}
             aria-label={`عدّ التسبيحة — العدد الحالي ${displayCount}`}
-            className="group relative flex h-[104px] w-[104px] cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-gold-300 via-gold-500 to-gold-700 shadow-[0_16px_40px_-14px_rgba(201,162,39,0.9)] transition-transform duration-200 active:scale-90 lg:h-[120px] lg:w-[120px]"
+            className="group relative flex h-[94px] w-[94px] sm:h-[110px] sm:w-[110px] cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-gold-300 via-gold-500 to-gold-700 shadow-[0_12px_36px_-10px_rgba(201,162,39,0.85)] transition-all active:scale-90 select-none"
           >
-            <span className="absolute inset-[5px] rounded-full border border-dashed border-white/40 transition-transform duration-500 group-hover:rotate-45" aria-hidden="true" />
-            <span className="font-mono text-4xl font-extrabold tabular-nums text-white drop-shadow-sm lg:text-5xl">{displayCount}</span>
+            <span className="absolute inset-[4px] rounded-full border border-dashed border-white/40 transition-transform duration-500 group-hover:rotate-45" aria-hidden="true" />
+            <span className="font-mono text-3xl sm:text-4xl font-extrabold tabular-nums text-white drop-shadow-sm">
+              {displayCount}
+            </span>
           </button>
 
-          <div className="w-full max-w-[190px]">
-            <div className="progress-track !bg-white/10 mb-2" role="progressbar" aria-valuenow={displayCount} aria-valuemin={0} aria-valuemax={target}>
+          <div className="w-full max-w-[170px]">
+            <div className="progress-track !bg-white/10 mb-1.5" role="progressbar" aria-valuenow={displayCount} aria-valuemin={0} aria-valuemax={target}>
               <div className="progress-fill" style={{ width: `${progress}%` }} />
             </div>
-            <div className="flex justify-between font-arabic text-[10px] font-semibold text-white/50" dir="rtl">
+            <div className="flex justify-between font-arabic text-[9.5px] font-semibold text-white/50" dir="rtl">
               <span>المجموع: {count}</span>
               <span>{displayCount}/{target}</span>
             </div>

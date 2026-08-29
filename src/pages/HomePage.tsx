@@ -4,12 +4,15 @@ import { FeaturedContent } from "../components/FeaturedContent";
 import { DailyReminder } from "../components/DailyReminder";
 import { SectionTitle } from "../components/SectionTitle";
 import type { Page } from "../components/Header";
+import type { City } from "../types";
 
 interface HomePageProps {
   onNavigate: (page: Page) => void;
+  selectedCity?: City;
+  onSelectCity?: (city: City) => void;
 }
 
-export function HomePage({ onNavigate }: HomePageProps) {
+export function HomePage({ onNavigate, selectedCity, onSelectCity }: HomePageProps) {
   const scrollToExplore = () => {
     document.getElementById("explore")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -18,25 +21,31 @@ export function HomePage({ onNavigate }: HomePageProps) {
     <div className="animate-page-enter">
       <Hero onExplore={scrollToExplore} onStart={() => onNavigate("quran")} />
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8">
         {/* Live prayer times preview */}
-        <PrayerTimesPanel variant="compact" />
+        <div className="mt-2 sm:mt-4">
+          <PrayerTimesPanel
+            variant="compact"
+            selectedCityOverride={selectedCity}
+            onCityChange={onSelectCity}
+          />
+        </div>
 
         {/* Featured content */}
-        <section id="explore" className="scroll-mt-24 pt-16 sm:pt-20" aria-labelledby="explore-heading">
+        <section id="explore" className="scroll-mt-20 pt-10 sm:pt-16" aria-labelledby="explore-heading">
           <SectionTitle
             eyebrow="Explore"
             title="Everything You Need"
             titleAr="كل ما تحتاجه في مكان واحد"
             subtitle="Carefully crafted tools for worship and knowledge — fast, beautiful and always with you."
           />
-          <div className="mt-10">
+          <div className="mt-6 sm:mt-9">
             <FeaturedContent onNavigate={onNavigate} />
           </div>
         </section>
 
         {/* Daily reminder */}
-        <section className="pt-16 sm:pt-20" aria-label="Daily reminder">
+        <section className="pt-10 sm:pt-16" aria-label="Daily reminder">
           <DailyReminder />
         </section>
       </div>

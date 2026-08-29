@@ -411,26 +411,38 @@ input[type="text"] { font-family: inherit; }
   background: #ffffff;
   border: 1px solid rgba(201, 162, 39, 0.22);
   border-radius: 14px;
-  padding: 10px 14px;
-  min-width: 62px;
+  padding: 8px 12px;
+  min-width: 54px;
   text-align: center;
   box-shadow: 0 2px 8px -4px rgba(156, 122, 22, 0.2);
 }
+@media (min-width: 640px) {
+  .countdown-box {
+    padding: 10px 14px;
+    min-width: 62px;
+  }
+}
 
-.touch-active:active { transform: scale(0.98); }
+.touch-active {
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.touch-active:active {
+  transform: scale(0.96);
+  opacity: 0.9;
+}
 
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(201, 162, 39, 0.3); border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(201, 162, 39, 0.5); }
 
 /* Prayer card states (light theme) */
 .prayer-card-next {
-  border: 1.5px solid rgba(201, 162, 39, 0.55) !important;
+  border: 1.5px solid rgba(201, 162, 39, 0.6) !important;
   background: linear-gradient(150deg, #fdfbf3 0%, #faf3dd 100%) !important;
   animation: glow-soft 3.2s ease-in-out infinite;
 }
@@ -441,5 +453,66 @@ input[type="text"] { font-family: inherit; }
 }
 
 /* Safe areas */
-.safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
-.safe-top { padding-top: env(safe-area-inset-top, 0px); }
+.safe-bottom {
+  padding-bottom: max(16px, env(safe-area-inset-bottom, 0px));
+}
+.safe-top {
+  padding-top: max(12px, env(safe-area-inset-top, 0px));
+}
+
+/* Mobile bottom nav safe padding for main content */
+.pb-mobile-nav {
+  padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+}
+@media (min-width: 768px) {
+  .pb-mobile-nav {
+    padding-bottom: 0px;
+  }
+}
+
+/* Bottom navigation specific styles */
+.bottom-nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  min-height: 52px;
+  padding: 6px 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.bottom-nav-icon-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 28px;
+  border-radius: 14px;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bottom-nav-active .bottom-nav-icon-box {
+  background: linear-gradient(135deg, rgba(201, 162, 39, 0.16), rgba(247, 240, 218, 0.8));
+  color: #9c7a16;
+  transform: translateY(-2px) scale(1.08);
+}
+
+.bottom-nav-indicator {
+  position: absolute;
+  bottom: 2px;
+  width: 14px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #c9a227, #e5c766);
+  box-shadow: 0 1px 4px rgba(201, 162, 39, 0.6);
+  animation: bounce-in 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}

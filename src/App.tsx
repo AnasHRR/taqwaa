@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Header, type Page } from "./components/Header";
+import { BottomNav } from "./components/BottomNav";
+import { MoreSheet } from "./components/MoreSheet";
 import { Footer } from "./components/Footer";
 import { CrescentMoon } from "./components/CrescentMoon";
 import { HomePage } from "./pages/HomePage";
@@ -7,6 +9,8 @@ import { QuranPage } from "./pages/QuranPage";
 import { SalaatPage } from "./pages/SalaatPage";
 import { DuaPage } from "./pages/DuaPage";
 import { AboutPage } from "./pages/AboutPage";
+import { MOROCCAN_CITIES } from "./constants";
+import type { City } from "./types";
 
 function SplashScreen({ onFinish }: { onFinish: () => void }) {
   const [exiting, setExiting] = useState(false);
@@ -14,8 +18,8 @@ function SplashScreen({ onFinish }: { onFinish: () => void }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setExiting(true);
-      setTimeout(onFinish, 550);
-    }, 1700);
+      setTimeout(onFinish, 500);
+    }, 1400);
     return () => clearTimeout(timer);
   }, [onFinish]);
 
@@ -29,20 +33,20 @@ function SplashScreen({ onFinish }: { onFinish: () => void }) {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 55% 40% at 50% 30%, rgba(201,162,39,0.10) 0%, transparent 65%)",
+            "radial-gradient(ellipse 55% 40% at 50% 30%, rgba(201,162,39,0.12) 0%, transparent 65%)",
         }}
         aria-hidden="true"
       />
       <div className="animate-bounce-in">
-        <CrescentMoon className="h-24 w-24 drop-shadow-[0_16px_36px_rgba(201,162,39,0.45)]" />
+        <CrescentMoon className="h-20 w-20 sm:h-24 sm:w-24 drop-shadow-[0_16px_36px_rgba(201,162,39,0.45)]" />
       </div>
-      <h1 className="font-quran mt-6 text-5xl font-bold text-gradient-gold animate-fade-in" style={{ animationDelay: "250ms" }}>
+      <h1 className="font-quran mt-5 text-4xl sm:text-5xl font-bold text-gradient-gold animate-fade-in" style={{ animationDelay: "200ms" }}>
         تقوى
       </h1>
-      <p className="mt-2 text-xs font-extrabold tracking-[0.4em] text-gold-700 uppercase animate-fade-in" style={{ animationDelay: "400ms" }}>
-        Taqwaa
+      <p className="mt-1.5 text-[10px] sm:text-xs font-extrabold tracking-[0.4em] text-gold-700 uppercase animate-fade-in" style={{ animationDelay: "320ms" }}>
+        Taqwaaa
       </p>
-      <div className="mt-9 h-8 w-8 animate-spin rounded-full border-2 border-gold-200 border-t-gold-500" style={{ animationDelay: "100ms" }} aria-hidden="true" />
+      <div className="mt-7 h-7 w-7 animate-spin rounded-full border-2 border-gold-200 border-t-gold-500" style={{ animationDelay: "100ms" }} aria-hidden="true" />
     </div>
   );
 }
@@ -50,9 +54,34 @@ function SplashScreen({ onFinish }: { onFinish: () => void }) {
 export function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [activePage, setActivePage] = useState<Page>("home");
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [pageKey, setPageKey] = useState(0);
 
+  const [selectedCity, setSelectedCity] = useState<City>(() => {
+    try {
+      const saved = localStorage.getItem("taqwaa-city");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const match = MOROCCAN_CITIES.find((c) => c.name === parsed.name);
+        if (match) return match;
+      }
+    } catch {
+      /* ignore */
+    }
+    return MOROCCAN_CITIES[0];
+  });
+
+  const handleSelectCity = (city: City) => {
+    setSelectedCity(city);
+    try {
+      localStorage.setItem("taqwaa-city", JSON.stringify(city));
+    } catch {
+      /* ignore */
+    }
+  };
+
   const handleNavigate = (page: Page) => {
+    setIsMoreOpen(false);
     if (page !== activePage) {
       setActivePage(page);
       setPageKey((k) => k + 1);
@@ -62,29 +91,74 @@ export function App() {
 
   const renderPage = () => {
     switch (activePage) {
-      case "home": return <HomePage onNavigate={handleNavigate} />;
-      case "quran": return <QuranPage />;
-      case "salaat": return <SalaatPage />;
-      case "dua": return <DuaPage />;
-      case "about": return <AboutPage onNavigate={handleNavigate} />;
-      default: return <HomePage onNavigate={handleNavigate} />;
+      case "home":
+        return (
+          <HomePage
+            onNavigate={handleNavigate}
+            selectedCity={selectedCity}
+            onSelectCity={handleSelectCity}
+          />
+        );
+      case "quran":
+        return <QuranPage />;
+      case "salaat":
+        return <SalaatPage />;
+      case "dua":
+        return <DuaPage />;
+      case "about":
+        return <AboutPage onNavigate={handleNavigate} />;
+      default:
+        return (
+          <HomePage
+            onNavigate={handleNavigate}
+            selectedCity={selectedCity}
+            onSelectCity={handleSelectCity}
+          />
+        );
     }
   };
 
   return (
-    <div className="relative min-h-[100dvh]">
+    <div className="relative min-h-[100dvh] flex flex-col justify-between">
       {/* Ambient background */}
       <div className="bg-app-canvas pointer-events-none fixed inset-0" aria-hidden="true" />
 
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
 
-      <Header activePage={activePage} onNavigate={handleNavigate} />
+      {/* Top Header (Mobile Simplified / Desktop Full) */}
+      <Header
+        activePage={activePage}
+        onNavigate={handleNavigate}
+        onOpenMore={() => setIsMoreOpen(true)}
+      />
 
-      <main key={pageKey} className="relative z-10 min-h-[70dvh] pt-[72px]">
+      {/* Main Content with Mobile Bottom Nav Safe Padding */}
+      <main
+        key={pageKey}
+        className="relative z-10 flex-1 min-h-[65dvh] pt-[60px] sm:pt-[68px] pb-mobile-nav"
+      >
         {renderPage()}
       </main>
 
+      {/* Footer */}
       <Footer onNavigate={handleNavigate} />
+
+      {/* Modern Fixed Bottom Navigation Bar (Mobile only, < 768px) */}
+      <BottomNav
+        activePage={activePage}
+        onNavigate={handleNavigate}
+        onOpenMore={() => setIsMoreOpen(true)}
+        isMoreOpen={isMoreOpen}
+      />
+
+      {/* Mobile "More" Drawer / Bottom Sheet */}
+      <MoreSheet
+        isOpen={isMoreOpen}
+        onClose={() => setIsMoreOpen(false)}
+        onNavigate={handleNavigate}
+        selectedCity={selectedCity}
+        onSelectCity={handleSelectCity}
+      />
     </div>
   );
 }

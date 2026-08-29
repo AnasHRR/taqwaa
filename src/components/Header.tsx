@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { BookOpen, Compass, Heart, Home, Info, Menu, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { BookOpen, Compass, Heart, Home, Info, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "../utils/cn";
 
@@ -14,22 +14,30 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { id: "home", labelAr: "الرئيسية", labelEn: "Home", icon: <Home size={18} strokeWidth={1.9} /> },
-  { id: "quran", labelAr: "القرآن", labelEn: "Quran", icon: <BookOpen size={18} strokeWidth={1.9} /> },
+  { id: "quran", labelAr: "القرآن الكريم", labelEn: "Quran", icon: <BookOpen size={18} strokeWidth={1.9} /> },
   { id: "salaat", labelAr: "مواقيت الصلاة", labelEn: "Prayer Times", icon: <Compass size={18} strokeWidth={1.9} /> },
-  { id: "dua", labelAr: "الأذكار", labelEn: "Azkar", icon: <Heart size={18} strokeWidth={1.9} /> },
-  { id: "about", labelAr: "حول", labelEn: "About", icon: <Info size={18} strokeWidth={1.9} /> },
+  { id: "dua", labelAr: "الأذكار والدعاء", labelEn: "Azkar", icon: <Heart size={18} strokeWidth={1.9} /> },
+  { id: "about", labelAr: "حول تقوى", labelEn: "About", icon: <Info size={18} strokeWidth={1.9} /> },
 ];
+
+const PAGE_TITLES: Record<Page, { ar: string; en: string }> = {
+  home: { ar: "الرئيسية", en: "Home" },
+  quran: { ar: "القرآن الكريم", en: "Quran" },
+  salaat: { ar: "مواقيت الصلاة", en: "Prayer Times" },
+  dua: { ar: "الأذكار والدعاء", en: "Azkar" },
+  about: { ar: "حول المنصة", en: "About Taqwaa" },
+};
 
 function Logo({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="group flex items-center gap-3"
+      className="group flex items-center gap-2.5 sm:gap-3 cursor-pointer text-start"
       aria-label="Taqwaa — الرئيسية"
     >
-      <span className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-gold-500/25 bg-gradient-to-br from-gold-100 to-gold-50 shadow-[0_4px_14px_-6px_rgba(201,162,39,0.45)] transition-transform duration-300 group-hover:scale-105">
+      <span className="relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl border border-gold-500/25 bg-gradient-to-br from-gold-100 to-gold-50 shadow-[0_4px_14px_-6px_rgba(201,162,39,0.45)] transition-transform duration-300 group-hover:scale-105">
         {/* crescent mark */}
-        <svg viewBox="0 0 24 24" className="h-6 w-6 text-gold-600" aria-hidden="true">
+        <svg viewBox="0 0 24 24" className="h-5 w-5 sm:h-6 sm:w-6 text-gold-600" aria-hidden="true">
           <path
             d="M12 2.5a6.5 6.5 0 0 0 9.7 9.7A10 10 0 1 1 12 2.5Z"
             fill="currentColor"
@@ -37,9 +45,9 @@ function Logo({ onClick }: { onClick: () => void }) {
         </svg>
       </span>
       <span className="flex flex-col items-start leading-none">
-        <span className="font-quran text-[26px] font-bold leading-none text-gradient-gold">تقوى</span>
-        <span className="mt-1 text-[9px] font-extrabold uppercase tracking-[0.34em] text-gold-700">
-          Taqwaa
+        <span className="font-quran text-[22px] sm:text-[26px] font-bold leading-none text-gradient-gold">تقوى</span>
+        <span className="mt-0.5 sm:mt-1 text-[8.5px] sm:text-[9px] font-extrabold uppercase tracking-[0.32em] text-gold-700">
+          Taqwaaa
         </span>
       </span>
     </button>
@@ -49,13 +57,11 @@ function Logo({ onClick }: { onClick: () => void }) {
 interface HeaderProps {
   activePage: Page;
   onNavigate: (page: Page) => void;
+  onOpenMore?: () => void;
 }
 
-export function Header({ activePage, onNavigate }: HeaderProps) {
+export function Header({ activePage, onNavigate, onOpenMore }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
-  const burgerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -64,144 +70,68 @@ export function Header({ activePage, onNavigate }: HeaderProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* Close menu on Escape + lock body scroll while open */
-  useEffect(() => {
-    if (!menuOpen) return;
-    document.body.style.overflow = "hidden";
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setMenuOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [menuOpen]);
-
-  const go = (page: Page) => {
-    setMenuOpen(false);
-    burgerRef.current?.focus();
-    onNavigate(page);
-  };
+  const pageInfo = PAGE_TITLES[activePage] || PAGE_TITLES.home;
 
   return (
-    <>
-      <header
-        className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-          scrolled
-            ? "bg-white/85 shadow-[0_6px_24px_-14px_rgba(31,31,31,0.25)] backdrop-blur-xl"
-            : "bg-white/60 backdrop-blur-md"
-        )}
-      >
-        {/* gold accent hairline */}
-        <div className="gold-hairline absolute inset-x-0 bottom-0 h-px opacity-70" aria-hidden="true" />
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-40 transition-all duration-300 safe-top",
+        scrolled
+          ? "bg-white/90 shadow-[0_4px_20px_-10px_rgba(31,31,31,0.15)] backdrop-blur-xl"
+          : "bg-white/70 backdrop-blur-md"
+      )}
+    >
+      {/* Gold accent hairline */}
+      <div className="gold-hairline absolute inset-x-0 bottom-0 h-px opacity-70" aria-hidden="true" />
 
-        <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Logo onClick={() => go("home")} />
+      <div className="mx-auto flex h-[60px] sm:h-[68px] max-w-7xl items-center justify-between px-3.5 sm:px-6 lg:px-8">
+        <Logo onClick={() => onNavigate("home")} />
 
-          {/* ===== Desktop navigation ===== */}
-          <nav className="hidden items-center gap-7 md:flex lg:gap-9" aria-label="Primary">
-            {NAV_ITEMS.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => onNavigate(item.id)}
-                aria-current={activePage === item.id ? "page" : undefined}
-                className={cn("nav-link font-arabic !text-[13px]", activePage === item.id && "nav-link-active")}
-              >
-                {item.labelAr}
-                <span className="text-[10px] font-sans font-semibold uppercase tracking-wider opacity-60">
-                  {item.labelEn}
-                </span>
-              </button>
-            ))}
-          </nav>
-
-          {/* ===== Mobile hamburger ===== */}
-          <button
-            ref={burgerRef}
-            onClick={() => setMenuOpen((o) => !o)}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-menu"
-            aria-label={menuOpen ? "إغلاق القائمة" : "فتح القائمة"}
-            className="icon-btn flex h-11 w-11 items-center justify-center md:hidden"
-          >
-            <span className="relative block h-5 w-5">
-              <X
-                size={20}
-                className={cn(
-                  "absolute inset-0 transition-all duration-300",
-                  menuOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0"
-                )}
-              />
-              <Menu
-                size={20}
-                className={cn(
-                  "absolute inset-0 transition-all duration-300",
-                  menuOpen ? "rotate-90 opacity-0" : "rotate-0 opacity-100"
-                )}
-              />
+        {/* ===== Mobile header contextual pill ===== */}
+        <div className="flex items-center gap-2 md:hidden">
+          {activePage !== "home" ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold-500/25 bg-gold-50/90 px-3 py-1 font-arabic text-xs font-bold text-gold-800 shadow-sm animate-fade-in">
+              <span className="h-1.5 w-1.5 rounded-full bg-gold-500 animate-pulse" />
+              {pageInfo.ar}
             </span>
-          </button>
+          ) : (
+            <span className="inline-flex items-center gap-1 rounded-full border border-gold-500/20 bg-white/80 px-2.5 py-1 font-arabic text-[11px] font-semibold text-gold-700 shadow-sm">
+              <Sparkles size={11} className="text-gold-600" />
+              المملكة المغربية
+            </span>
+          )}
+
+          {onOpenMore && (
+            <button
+              onClick={onOpenMore}
+              className="icon-btn h-9 w-9 rounded-xl border border-ink-200/80 bg-white text-ink-600 hover:border-gold-500/40 hover:text-gold-700 active:scale-95"
+              aria-label="خيارات إضافية"
+            >
+              <Info size={16} />
+            </button>
+          )}
         </div>
-      </header>
 
-      {/* ===== Mobile menu overlay panel ===== */}
-      <div
-        id="mobile-menu"
-        ref={menuRef}
-        className={cn(
-          "fixed inset-x-0 bottom-0 top-[72px] z-40 flex flex-col bg-white/95 backdrop-blur-xl transition-all duration-300 ease-out md:hidden",
-          menuOpen ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-3 opacity-0"
-        )}
-        role="dialog"
-        aria-modal="true"
-        aria-label="قائمة التنقل"
-        hidden={!menuOpen}
-      >
-        <div className="gold-hairline absolute inset-x-0 top-0 h-px" aria-hidden="true" />
-
-        <nav className="flex flex-1 flex-col gap-1.5 overflow-y-auto px-4 pb-8 pt-5" aria-label="Mobile">
-          {NAV_ITEMS.map((item, i) => {
-            const isActive = activePage === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => go(item.id)}
-                aria-current={isActive ? "page" : undefined}
-                style={{ transitionDelay: menuOpen ? `${i * 40}ms` : "0ms" }}
-                className={cn(
-                  "mobile-nav-item transition-all duration-300",
-                  isActive && "mobile-nav-item-active",
-                  menuOpen ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
-                )}
-              >
-                <span
-                  className={cn(
-                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border transition-colors",
-                    isActive
-                      ? "border-gold-500/35 bg-gradient-to-br from-gold-100 to-gold-50 text-gold-700"
-                      : "border-ink-200 bg-ink-50 text-ink-500"
-                  )}
-                >
-                  {item.icon}
-                </span>
-                <span className="flex flex-col items-start leading-tight">
-                  {item.labelAr}
-                  <span className="font-sans text-[10px] font-bold uppercase tracking-[0.18em] opacity-55">
-                    {item.labelEn}
-                  </span>
-                </span>
-              </button>
-            );
-          })}
+        {/* ===== Desktop navigation (hidden on mobile) ===== */}
+        <nav className="hidden items-center gap-6 md:flex lg:gap-8" aria-label="Primary">
+          {NAV_ITEMS.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => onNavigate(item.id)}
+              aria-current={activePage === item.id ? "page" : undefined}
+              className={cn(
+                "nav-link font-arabic !text-[13.5px]",
+                activePage === item.id && "nav-link-active"
+              )}
+            >
+              <span className="text-inherit">{item.labelAr}</span>
+              <span className="text-[10px] font-sans font-semibold uppercase tracking-wider opacity-60">
+                {item.labelEn}
+              </span>
+            </button>
+          ))}
         </nav>
-
-        <div className="px-6 pb-[max(20px,env(safe-area-inset-bottom))] text-center">
-          <div className="divider-gold mb-4" />
-          <p className="font-arabic text-xs text-ink-500">وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ</p>
-        </div>
       </div>
-    </>
+    </header>
   );
 }
