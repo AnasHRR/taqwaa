@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState, useCallback } from "react";
 import { BookOpen, Compass, Heart, Home, MoreHorizontal } from "lucide-react";
 import type { Page } from "./Header";
 import { cn } from "../utils/cn";
@@ -9,14 +10,14 @@ export interface BottomNavProps {
   isMoreOpen?: boolean;
 }
 
-interface BottomNavItem {
+interface NavItemDef {
   id: Page | "more";
   labelAr: string;
   labelEn: string;
   icon: typeof Home;
 }
 
-const ITEMS: BottomNavItem[] = [
+const ITEMS: NavItemDef[] = [
   { id: "home", labelAr: "الرئيسية", labelEn: "Home", icon: Home },
   { id: "quran", labelAr: "القرآن", labelEn: "Quran", icon: BookOpen },
   { id: "salaat", labelAr: "الصلاة", labelEn: "Prayer", icon: Compass },
@@ -24,7 +25,45 @@ const ITEMS: BottomNavItem[] = [
   { id: "more", labelAr: "المزيد", labelEn: "More", icon: MoreHorizontal },
 ];
 
-export function BottomNav({ activePage, onNavigate, onOpenMore, isMoreOpen = false }: BottomNavProps) {
+export function BottomNav({
+  activePage,
+  onNavigate,
+  onOpenMore,
+  isMoreOpen = false,
+}: BottomNavProps) {
+  const [scrollHidden, setScrollHidden] = useState(false);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
+
+  // Scroll-aware: subtle shift down when scrolling down, reappear on scroll up
+  const handleScroll = useCallback(() => {
+    if (ticking.current) return;
+    ticking.current = true;
+    requestAnimationFrame(() => {
+      const currentY = window.scrollY;
+      const delta = currentY - lastScrollY.current;
+      // Only trigger after a meaningful scroll (> 8px threshold)
+      if (delta > 8 && currentY > 60) {
+        setScrollHidden(true);
+      } else if (delta < -8) {
+        setScrollHidden(false);
+      }
+      lastScrollY.current = currentY;
+      ticking.current = false;
+    });
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
+  // Find the active index for the sliding pill
+  const activeIndex = ITEMS.findIndex((item) => {
+    if (item.id === "more") return isMoreOpen;
+    return activePage === item.id && !isMoreOpen;
+  });
+
   const handleClick = (id: Page | "more") => {
     if (id === "more") {
       onOpenMore();
@@ -36,65 +75,70 @@ export function BottomNav({ activePage, onNavigate, onOpenMore, isMoreOpen = fal
   return (
     <nav
       aria-label="Mobile Navigation"
-      className="fixed inset-x-0 bottom-0 z-50 block md:hidden select-none"
+      className={cn(
+        "floating-nav-root",
+        scrollHidden && "floating-nav-hidden"
+      )}
     >
-      {/* Frosted container with Islamic gold subtle hairline top border and shadow */}
-      <div className="relative mx-auto border-t border-gold-500/25 bg-white/95 backdrop-blur-xl shadow-[0_-8px_30px_rgba(31,31,31,0.08)] rounded-t-[22px]">
-        {/* Subtle accent glow line at the top */}
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-gold-500/60 to-transparent"
-          aria-hidden="true"
-        />
+      <div className="floating-nav-pill">
+        {/* Subtle gold shimmer line at the top */}
+        <div className="floating-nav-shimmer" aria-hidden="true" />
 
-        {/* Navigation buttons container */}
-        <div className="flex h-[66px] items-center justify-around px-2 pt-1 pb-[env(safe-area-inset-bottom,4px)]">
-          {ITEMS.map((item) => {
-            const isMore = item.id === "more";
-            const isActive = isMore ? isMoreOpen : activePage === item.id && !isMoreOpen;
-            const Icon = item.icon;
+        {/* Sliding active pill background */}
+        {activeIndex >= 0 && (
+          <span
+            className="floating-nav-active-pill"
+            aria-hidden="true"
+            style={{
+              transform: `translateX(${activeIndex * 100}%)`,
+            }}
+          />
+        )}
 
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => handleClick(item.id)}
-                aria-label={`${item.labelEn} — ${item.labelAr}`}
-                aria-current={isActive ? "page" : undefined}
+        {/* Navigation items */}
+        {ITEMS.map((item, index) => {
+          const isMore = item.id === "more";
+          const isActive = isMore
+            ? isMoreOpen
+            : activePage === item.id && !isMoreOpen;
+          const Icon = item.icon;
+
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => handleClick(item.id)}
+              aria-label={`${item.labelEn} — ${item.labelAr}`}
+              aria-current={isActive ? "page" : undefined}
+              className={cn(
+                "floating-nav-btn",
+                isActive && "floating-nav-btn-active"
+              )}
+            >
+              <span className="floating-nav-icon-wrap">
+                <Icon
+                  size={20}
+                  strokeWidth={isActive ? 2.3 : 1.8}
+                  className={cn(
+                    "floating-nav-icon",
+                    isActive && "floating-nav-icon-active"
+                  )}
+                />
+              </span>
+              {/* Label — only visible when active */}
+              <span
                 className={cn(
-                  "bottom-nav-item group relative",
-                  isActive ? "bottom-nav-active text-gold-700 font-bold" : "text-ink-500 hover:text-ink-800"
+                  "floating-nav-label",
+                  isActive
+                    ? "floating-nav-label-visible"
+                    : "floating-nav-label-hidden"
                 )}
               >
-                {/* Icon box with scale & soft pill background */}
-                <span className="bottom-nav-icon-box">
-                  <Icon
-                    size={20}
-                    strokeWidth={isActive ? 2.4 : 1.9}
-                    className={cn(
-                      "transition-all duration-200",
-                      isActive ? "text-gold-700" : "text-ink-400 group-hover:text-ink-600"
-                    )}
-                  />
-                </span>
-
-                {/* Text Label */}
-                <span
-                  className={cn(
-                    "mt-0.5 text-[10.5px] leading-none tracking-tight font-arabic transition-colors duration-200",
-                    isActive ? "font-bold text-gold-800" : "font-medium text-ink-500"
-                  )}
-                >
-                  {item.labelAr}
-                </span>
-
-                {/* Small Animated Active Pill Indicator */}
-                {isActive && (
-                  <span className="bottom-nav-indicator" aria-hidden="true" />
-                )}
-              </button>
-            );
-          })}
-        </div>
+                {item.labelEn}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </nav>
   );
