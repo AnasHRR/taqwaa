@@ -2,9 +2,21 @@ import { MoonStar, Sparkles } from "lucide-react";
 import { DAILY_VERSES } from "../constants";
 import { CrescentMoon } from "./CrescentMoon";
 import { IslamicPattern } from "./IslamicPattern";
+import { useTranslation } from "../i18n";
 
 export function DailyReminder() {
+  const { t, language } = useTranslation();
   const verse = DAILY_VERSES[new Date().getDay()];
+
+  const localizedTranslation =
+    language === "fr"
+      ? verse.translationFr
+      : language === "en"
+      ? verse.translationEn
+      : null;
+
+  const localizedRef =
+    language === "fr" ? verse.refFr : language === "en" ? verse.refEn : verse.ref;
 
   return (
     <section
@@ -29,18 +41,19 @@ export function DailyReminder() {
         <div className="flex items-center justify-center gap-2 animate-fade-in-up">
           <MoonStar size={14} className="text-gold-400" aria-hidden="true" />
           <h2 id="daily-reminder-heading" className="text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.28em] text-gold-300">
-            Daily Reminder
+            {t("dailyReminder.badge")}
           </h2>
           <MoonStar size={14} className="text-gold-400" aria-hidden="true" />
         </div>
 
-        <p className="font-arabic mt-2 text-xs sm:text-sm font-semibold text-white/60 animate-fade-in-up" style={{ animationDelay: "70ms" }} dir="rtl">
-          تذكير اليوم
+        <p className="mt-2 text-xs sm:text-sm font-semibold text-white/60 animate-fade-in-up" style={{ animationDelay: "70ms" }}>
+          {t("dailyReminder.title")}
         </p>
 
         <div className="mx-auto mt-4 sm:mt-6 h-px w-20 bg-gradient-to-r from-transparent via-gold-400/70 to-transparent" aria-hidden="true" />
 
         <blockquote className="animate-fade-in-up" style={{ animationDelay: "140ms" }}>
+          {/* Authentic Arabic Quran Verse */}
           <p
             className="mt-5 sm:mt-6 font-quran text-xl sm:text-2xl md:text-3xl leading-[2.1] text-gradient-gold-light"
             dir="rtl"
@@ -48,9 +61,17 @@ export function DailyReminder() {
           >
             ﴿ {verse.text} ﴾
           </p>
+
+          {/* Translation when in French or English */}
+          {localizedTranslation && (
+            <p className="mt-3 max-w-lg mx-auto text-xs sm:text-sm italic text-white/80 leading-relaxed">
+              "{localizedTranslation}"
+            </p>
+          )}
+
           <footer className="mt-4 sm:mt-6">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold-500/25 bg-white/[0.04] px-3.5 py-1 font-arabic text-xs font-bold tracking-wide text-gold-200" dir="rtl">
-              {verse.ref}
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-gold-500/25 bg-white/[0.04] px-3.5 py-1 text-xs font-bold tracking-wide text-gold-200">
+              {localizedRef}
             </span>
           </footer>
         </blockquote>

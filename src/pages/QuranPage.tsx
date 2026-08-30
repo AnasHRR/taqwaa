@@ -1,35 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft, ArrowRight, BookOpen, ChevronLeft, ChevronRight,
-  FileText, Search, SearchX, Sparkles, Type, X, BookmarkCheck, Share2
+  FileText, Search, SearchX, Sparkles, X, BookmarkCheck
 } from "lucide-react";
 import { DAILY_VERSES } from "../constants";
 import { QuranCard, type Surah } from "../components/QuranCard";
+import { useTranslation } from "../i18n";
 import { cn } from "../utils/cn";
 
 type RevelationFilter = "all" | "Meccan" | "Medinan";
 
-const FILTERS: { id: RevelationFilter; labelAr: string; labelEn: string }[] = [
-  { id: "all", labelAr: "الكل", labelEn: "All" },
-  { id: "Meccan", labelAr: "مكية", labelEn: "Meccan" },
-  { id: "Medinan", labelAr: "مدنية", labelEn: "Medinan" },
-];
-
-const toArabicNumber = (n: number): string =>
-  String(n).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[Number(d)]);
-
-interface Ayah {
-  number: number;
-  text: string;
-  numberInSurah: number;
-  juz: number;
-  page: number;
-}
-
 export function QuranPage() {
+  const { t, language, isRTL, formatNumber } = useTranslation();
   const [surahs, setSurahs] = useState<Surah[]>([]);
   const [selectedSurah, setSelectedSurah] = useState<number | null>(null);
-  const [ayahs, setAyahs] = useState<Ayah[]>([]);
+  const [ayahs, setAyahs] = useState<any[]>([]);
   const [loadingSurahs, setLoadingSurahs] = useState(true);
   const [loadingAyahs, setLoadingAyahs] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,6 +23,20 @@ export function QuranPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const dailyVerse = DAILY_VERSES[new Date().getDay()];
+  const localizedDailyTranslation =
+    language === "fr"
+      ? dailyVerse.translationFr
+      : language === "en"
+      ? dailyVerse.translationEn
+      : null;
+  const localizedDailyRef =
+    language === "fr" ? dailyVerse.refFr : language === "en" ? dailyVerse.refEn : dailyVerse.ref;
+
+  const filters: { id: RevelationFilter; label: string }[] = [
+    { id: "all", label: t("quran.filterAll") },
+    { id: "Meccan", label: t("quran.filterMeccan") },
+    { id: "Medinan", label: t("quran.filterMedinan") },
+  ];
 
   useEffect(() => {
     fetch("https://api.alquran.cloud/v1/surah")
@@ -87,7 +86,6 @@ export function QuranPage() {
   );
 
   const currentSurah = surahs.find((s) => s.number === selectedSurah);
-
   const prevSurahNum = selectedSurah && selectedSurah > 1 ? selectedSurah - 1 : null;
   const nextSurahNum = selectedSurah && selectedSurah < 114 ? selectedSurah + 1 : null;
 
@@ -116,10 +114,10 @@ export function QuranPage() {
               </span>
               <div>
                 <h1 className="font-quran text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight text-gradient-gold">
-                  القرآن الكريم
+                  {t("quran.title")}
                 </h1>
                 <p className="mt-1 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-ink-500">
-                  The Noble Quran · 114 Surahs
+                  {t("quran.subtitle")}
                 </p>
               </div>
             </header>
@@ -127,13 +125,13 @@ export function QuranPage() {
             {/* ===== Daily verse banner ===== */}
             <section
               className="card-beige relative mt-6 max-w-3xl overflow-hidden p-5 sm:p-7 text-center animate-fade-in-up"
-              aria-label="آية اليوم"
+              aria-label={t("quran.dailyVerseTitle")}
             >
               <div className="gold-hairline absolute inset-x-0 top-0 h-px" aria-hidden="true" />
               <div className="flex items-center justify-center gap-2">
                 <Sparkles size={13} className="text-gold-600" aria-hidden="true" />
-                <span className="font-arabic text-[11px] font-extrabold tracking-widest text-gold-700">
-                  آية اليوم
+                <span className="text-[11px] font-extrabold tracking-widest text-gold-700">
+                  {t("quran.dailyVerseTitle")}
                 </span>
               </div>
               <p
@@ -141,11 +139,16 @@ export function QuranPage() {
                 dir="rtl"
                 lang="ar"
               >
-                {dailyVerse.text}
+                ﴿ {dailyVerse.text} ﴾
               </p>
+              {localizedDailyTranslation && (
+                <p className="mt-2.5 text-xs sm:text-sm italic text-ink-600 leading-relaxed max-w-xl mx-auto">
+                  "{localizedDailyTranslation}"
+                </p>
+              )}
               <div className="divider-gold mx-auto my-3 w-16" aria-hidden="true" />
-              <p className="font-arabic text-[11px] font-bold tracking-wide text-ink-500" dir="rtl">
-                {dailyVerse.ref}
+              <p className="text-[11px] font-bold tracking-wide text-ink-500">
+                {localizedDailyRef}
               </p>
             </section>
           </>
@@ -158,12 +161,11 @@ export function QuranPage() {
               <div className="relative flex-1 sm:max-w-md">
                 <input
                   type="text"
-                  placeholder="ابحث عن سورة بالاسم أو الرقم..."
+                  placeholder={t("quran.searchPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  aria-label="ابحث عن سورة"
-                  className="input-field pe-10 ps-10 text-right font-arabic !py-2.5 !text-sm"
-                  dir="rtl"
+                  aria-label={t("quran.searchPlaceholder")}
+                  className="input-field pe-10 ps-10 !py-2.5 !text-sm"
                 />
                 <Search
                   size={16}
@@ -171,9 +173,10 @@ export function QuranPage() {
                 />
                 {searchQuery && (
                   <button
+                    type="button"
                     onClick={() => setSearchQuery("")}
                     className="absolute start-3 top-1/2 -translate-y-1/2 p-1 text-ink-400 hover:text-ink-700"
-                    aria-label="مسح البحث"
+                    aria-label={t("common.reset")}
                   >
                     <X size={14} />
                   </button>
@@ -183,19 +186,17 @@ export function QuranPage() {
               <div
                 className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar"
                 role="group"
-                aria-label="تصفية السور"
+                aria-label={t("common.filter")}
               >
-                {FILTERS.map((f) => (
+                {filters.map((f) => (
                   <button
                     key={f.id}
+                    type="button"
                     onClick={() => setFilter(f.id)}
                     aria-pressed={filter === f.id}
                     className={cn("chip shrink-0 !py-2 !px-3.5 !text-xs", filter === f.id && "chip-active")}
                   >
-                    {f.labelAr}
-                    <span className="font-sans text-[8.5px] uppercase tracking-wider opacity-70">
-                      {f.labelEn}
-                    </span>
+                    {f.label}
                   </button>
                 ))}
               </div>
@@ -203,9 +204,9 @@ export function QuranPage() {
 
             {/* ===== Surah grid ===== */}
             {loadingSurahs ? (
-              <LoadingState label="جاري تحميل فهرس السور..." />
+              <LoadingState label={t("quran.loadingSurahs")} />
             ) : filteredSurahs.length === 0 ? (
-              <EmptyState />
+              <EmptyState title={t("quran.surahNotFound")} />
             ) : (
               <div className="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
                 {filteredSurahs.map((surah, idx) => (
@@ -225,71 +226,77 @@ export function QuranPage() {
             {/* Sticky Reader Toolbar */}
             <div className="sticky top-[68px] sm:top-[76px] z-30 mb-4 rounded-2xl border border-gold-500/25 bg-white/95 backdrop-blur-md px-3 sm:px-4 py-2.5 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.1)] flex items-center justify-between gap-2">
               <button
+                type="button"
                 onClick={() => {
                   setSelectedSurah(null);
                   setAyahs([]);
                 }}
-                className="group flex cursor-pointer items-center gap-1.5 rounded-xl bg-ink-50 px-2.5 py-1.5 text-ink-700 hover:bg-gold-50 hover:text-gold-700 transition-colors"
-                aria-label="العودة إلى قائمة السور"
+                className="group flex cursor-pointer items-center gap-1.5 rounded-xl bg-ink-50 px-2.5 py-1.5 text-ink-700 hover:bg-gold-50 hover:text-gold-700 transition-colors text-start"
+                aria-label={t("quran.backToList")}
               >
-                <ArrowRight size={15} />
-                <span className="font-arabic text-xs font-bold">السور</span>
+                <ArrowLeft size={15} className="rtl-flip" />
+                <span className="text-xs font-bold">{t("quran.backToList")}</span>
               </button>
 
               {/* Prev / Next Surah Controls */}
               <div className="flex items-center gap-1">
                 <button
+                  type="button"
                   onClick={() => prevSurahNum && loadSurah(prevSurahNum)}
                   disabled={!prevSurahNum}
                   className="icon-btn h-8 w-8 !rounded-lg disabled:opacity-30 disabled:pointer-events-none"
-                  aria-label="السورة السابقة"
-                  title="السورة السابقة"
+                  aria-label={t("quran.prevSurah")}
+                  title={t("quran.prevSurah")}
                 >
-                  <ChevronRight size={16} />
+                  <ChevronLeft size={16} className="rtl-flip" />
                 </button>
                 <span className="font-quran text-sm font-bold text-gold-800 px-1.5 truncate max-w-[120px] sm:max-w-none">
                   {currentSurah?.name}
                 </span>
                 <button
+                  type="button"
                   onClick={() => nextSurahNum && loadSurah(nextSurahNum)}
                   disabled={!nextSurahNum}
                   className="icon-btn h-8 w-8 !rounded-lg disabled:opacity-30 disabled:pointer-events-none"
-                  aria-label="السورة التالية"
-                  title="السورة التالية"
+                  aria-label={t("quran.nextSurah")}
+                  title={t("quran.nextSurah")}
                 >
-                  <ChevronLeft size={16} />
+                  <ChevronRight size={16} className="rtl-flip" />
                 </button>
               </div>
 
               {/* Font size toggles */}
               <div className="flex items-center gap-1 bg-ink-50 rounded-xl p-0.5 border border-ink-200/60">
                 <button
+                  type="button"
                   onClick={() => setFontSize("normal")}
                   className={cn(
                     "px-2 py-1 rounded-lg text-xs font-bold transition-colors",
                     fontSize === "normal" ? "bg-white text-gold-700 shadow-sm" : "text-ink-500"
                   )}
-                  title="خط عادي"
+                  title={t("quran.normal")}
                 >
                   A
                 </button>
                 <button
+                  type="button"
                   onClick={() => setFontSize("large")}
                   className={cn(
                     "px-2 py-1 rounded-lg text-xs font-bold transition-colors",
                     fontSize === "large" ? "bg-white text-gold-700 shadow-sm" : "text-ink-500"
                   )}
-                  title="خط كبير"
+                  title={t("quran.large")}
                 >
                   A+
                 </button>
                 <button
+                  type="button"
                   onClick={() => setFontSize("xlarge")}
                   className={cn(
                     "px-2 py-1 rounded-lg text-xs font-bold transition-colors",
                     fontSize === "xlarge" ? "bg-white text-gold-700 shadow-sm" : "text-ink-500"
                   )}
-                  title="خط كبير جداً"
+                  title={t("quran.xlarge")}
                 >
                   A++
                 </button>
@@ -312,12 +319,12 @@ export function QuranPage() {
                   <p className="mt-1 text-[11px] sm:text-xs font-semibold uppercase tracking-[0.18em] text-ink-500">
                     {currentSurah.englishName} — {currentSurah.englishNameTranslation}
                   </p>
-                  <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-gold-500/20 bg-gold-50/80 px-3.5 py-1 font-arabic text-xs font-bold text-gold-800" dir="rtl">
-                    <span>{toArabicNumber(currentSurah.numberOfAyahs)} آية</span>
+                  <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-gold-500/20 bg-gold-50/80 px-3.5 py-1 text-xs font-bold text-gold-800">
+                    <span>{formatNumber(currentSurah.numberOfAyahs)} {t("quran.ayahsCount")}</span>
                     <span>•</span>
-                    <span>{currentSurah.revelationType === "Meccan" ? "مكية" : "مدنية"}</span>
+                    <span>{currentSurah.revelationType === "Meccan" ? t("quran.meccan") : t("quran.medinan")}</span>
                     <span>•</span>
-                    <span>ترتيبها {toArabicNumber(currentSurah.number)}</span>
+                    <span>{t("quran.surahNumber")} {formatNumber(currentSurah.number)}</span>
                   </div>
                 </div>
               </div>
@@ -330,13 +337,13 @@ export function QuranPage() {
                 dir="rtl"
                 lang="ar"
               >
-                بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                {t("quran.bismillah")}
               </p>
             )}
 
-            {/* Ayahs Display */}
+            {/* Ayahs Display - Always in Arabic Quran typography */}
             {loadingAyahs ? (
-              <LoadingState label="جاري تحميل آيات السورة..." />
+              <LoadingState label={t("quran.loadingAyahs")} />
             ) : (
               <article className="card relative p-4 sm:p-8 lg:p-10 animate-fade-in-up mt-3">
                 <div
@@ -354,10 +361,10 @@ export function QuranPage() {
                       {ayah.text}{" "}
                       <span
                         className="octagram mx-1 inline-flex h-7 w-7 sm:h-8 sm:w-8 align-middle select-none"
-                        title={`آية ${ayah.numberInSurah}`}
+                        title={`${t("quran.surahNumber")} ${ayah.numberInSurah}`}
                       >
                         <span className="font-arabic text-[9px] sm:text-[10px] font-bold text-gold-700">
-                          {toArabicNumber(ayah.numberInSurah)}
+                          {formatNumber(ayah.numberInSurah)}
                         </span>
                       </span>{" "}
                     </span>
@@ -369,30 +376,33 @@ export function QuranPage() {
                 <div className="flex items-center justify-between gap-3 pt-2">
                   {prevSurahNum ? (
                     <button
+                      type="button"
                       onClick={() => loadSurah(prevSurahNum)}
                       className="btn btn-secondary btn-sm cursor-pointer !py-2 !px-3"
                     >
-                      <ChevronRight size={15} />
-                      <span className="font-arabic">السورة السابقة</span>
+                      <ChevronLeft size={15} className="rtl-flip" />
+                      <span>{t("quran.prevSurah")}</span>
                     </button>
                   ) : <div />}
 
                   <button
-                    onClick={() => showToast("تم حفظ موضع القراءة")}
+                    type="button"
+                    onClick={() => showToast(t("quran.copiedAyah"))}
                     className="btn btn-secondary btn-sm cursor-pointer !py-2 !px-3 text-gold-700"
-                    title="حفظ موضع القراءة"
+                    title={t("quran.copiedAyah")}
                   >
                     <BookmarkCheck size={15} />
-                    <span className="font-arabic hidden sm:inline">حفظ الموضع</span>
+                    <span className="hidden sm:inline">{t("common.favorites")}</span>
                   </button>
 
                   {nextSurahNum && (
                     <button
+                      type="button"
                       onClick={() => loadSurah(nextSurahNum)}
                       className="btn btn-primary btn-sm cursor-pointer !py-2 !px-3"
                     >
-                      <span className="font-arabic">السورة التالية</span>
-                      <ChevronLeft size={15} />
+                      <span>{t("quran.nextSurah")}</span>
+                      <ChevronRight size={15} className="rtl-flip" />
                     </button>
                   )}
                 </div>
@@ -412,21 +422,16 @@ function LoadingState({ label }: { label: string }) {
         className="h-9 w-9 animate-spin rounded-full border-2 border-ink-200 border-t-gold-500"
         aria-hidden="true"
       />
-      <p className="mt-3 font-arabic text-sm text-ink-500" dir="rtl">
-        {label}
-      </p>
+      <p className="mt-3 text-sm text-ink-500">{label}</p>
     </div>
   );
 }
 
-function EmptyState() {
+function EmptyState({ title }: { title: string }) {
   return (
     <div className="card mt-5 flex flex-col items-center py-14 text-center">
       <SearchX size={32} className="mb-2.5 text-ink-300" aria-hidden="true" />
-      <p className="font-arabic text-sm font-bold text-ink-700" dir="rtl">
-        لا توجد نتائج مطابقة
-      </p>
-      <p className="mt-1 text-xs text-ink-500">جرب البحث باسم سورة آخر أو برقم السورة.</p>
+      <p className="text-sm font-bold text-ink-700">{title}</p>
     </div>
   );
 }

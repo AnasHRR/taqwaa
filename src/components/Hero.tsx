@@ -3,30 +3,33 @@ import { Button } from "./Button";
 import { CrescentMoon } from "./CrescentMoon";
 import { IslamicPattern } from "./IslamicPattern";
 import { MosqueSilhouette } from "./MosqueSilhouette";
+import { useTranslation } from "../i18n";
 
 interface HeroProps {
   onExplore: () => void;
   onStart: () => void;
 }
 
-const STATS = [
-  { valueAr: "١١٤", labelEn: "Surahs", labelAr: "سورة" },
-  { valueAr: "٥", labelEn: "Prayers", labelAr: "صلوات" },
-  { valueAr: "+٢٢", labelEn: "Cities", labelAr: "مدينة" },
-  { valueAr: "∞", labelEn: "Azkar", labelAr: "أذكار" },
-];
-
 export function Hero({ onExplore, onStart }: HeroProps) {
+  const { t, formatNumber } = useTranslation();
+
+  const stats = [
+    { value: formatNumber(114), label: t("hero.statsSurahs") },
+    { value: formatNumber(5), label: t("hero.statsPrayers") },
+    { value: `+${formatNumber(22)}`, label: t("hero.statsCities") },
+    { value: "∞", label: t("hero.statsAzkar") },
+  ];
+
   return (
     <section className="relative overflow-hidden pt-4 sm:pt-10 lg:pt-14" aria-labelledby="hero-heading">
       {/* Decorative background layers */}
       <IslamicPattern className="pointer-events-none absolute inset-0 h-full w-full" opacity={0.05} />
       <div
-        className="pointer-events-none absolute -top-32 right-[-10%] h-[340px] sm:h-[420px] w-[340px] sm:w-[420px] rounded-full bg-gold-300/20 blur-[100px]"
+        className="pointer-events-none absolute -top-32 end-[-10%] h-[340px] sm:h-[420px] w-[340px] sm:w-[420px] rounded-full bg-gold-300/20 blur-[100px]"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -bottom-24 left-[-8%] h-[280px] sm:h-[320px] w-[280px] sm:w-[320px] rounded-full bg-gold-100 blur-[80px]"
+        className="pointer-events-none absolute -bottom-24 start-[-8%] h-[280px] sm:h-[320px] w-[280px] sm:w-[320px] rounded-full bg-gold-100 blur-[80px]"
         aria-hidden="true"
       />
       <MosqueSilhouette
@@ -37,19 +40,19 @@ export function Hero({ onExplore, onStart }: HeroProps) {
       <div className="relative mx-auto max-w-7xl px-3.5 pb-16 sm:px-6 sm:pb-24 sm:pt-8 lg:px-8 lg:pb-32">
         <div className="mx-auto max-w-3xl text-center">
           {/* Greeting badge */}
-          <span className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-gold-500/30 bg-white/85 px-3.5 py-1.5 font-arabic text-[11px] sm:text-xs font-bold text-gold-800 shadow-[0_4px_16px_-8px_rgba(201,162,39,0.4)] animate-fade-in-up backdrop-blur">
+          <span className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full border border-gold-500/30 bg-white/85 px-3.5 py-1.5 text-[11px] sm:text-xs font-bold text-gold-800 shadow-[0_4px_16px_-8px_rgba(201,162,39,0.4)] animate-fade-in-up backdrop-blur">
             <Sparkles size={12} className="text-gold-600 shrink-0" aria-hidden="true" />
-            السلام عليكم ورحمة الله وبركاته
+            {t("hero.greeting")}
           </span>
 
           {/* Heading */}
           <h1
             id="hero-heading"
-            className="mt-4 sm:mt-6 text-balance text-[28px] sm:text-4xl md:text-5xl lg:text-[3.6rem] font-extrabold leading-[1.15] tracking-tight text-ink-900 animate-fade-in-up"
+            className="mt-4 sm:mt-6 text-balance text-[28px] sm:text-4xl md:text-5xl lg:text-[3.6rem] font-extrabold leading-[1.18] tracking-tight text-ink-900 animate-fade-in-up"
             style={{ animationDelay: "90ms" }}
           >
-            Your Journey Towards{" "}
-            <span className="text-gradient-gold">Faith&nbsp;&amp;&nbsp;Knowledge</span>
+            {t("hero.titleStart")}
+            <span className="text-gradient-gold">{t("hero.titleHighlight")}</span>
           </h1>
 
           <p
@@ -57,7 +60,7 @@ export function Hero({ onExplore, onStart }: HeroProps) {
             style={{ animationDelay: "160ms" }}
             dir="rtl"
           >
-            رِحْلَتُكَ نَحْوَ الإيمَانِ وَالمَعْرِفَةِ
+            {t("hero.arabicSlogan")}
           </p>
 
           {/* Description */}
@@ -65,8 +68,7 @@ export function Hero({ onExplore, onStart }: HeroProps) {
             className="mx-auto mt-3 sm:mt-4 max-w-xl text-pretty text-xs sm:text-sm md:text-base leading-relaxed text-ink-600 animate-fade-in-up"
             style={{ animationDelay: "230ms" }}
           >
-            Discover Quranic knowledge, accurate prayer times for Morocco, authentic azkar and daily
-            reminders — crafted for a calm spiritual companion.
+            {t("hero.description")}
           </p>
 
           {/* CTAs */}
@@ -77,19 +79,19 @@ export function Hero({ onExplore, onStart }: HeroProps) {
             <Button
               onClick={onExplore}
               className="w-full sm:w-auto !py-3 !text-sm"
-              aria-label="Explore Taqwaa features"
+              aria-label={t("hero.exploreBtn")}
             >
               <Compass size={16} strokeWidth={2} aria-hidden="true" />
-              Explore Taqwaa
+              {t("hero.exploreBtn")}
             </Button>
             <Button
               variant="secondary"
               onClick={onStart}
               className="w-full sm:w-auto !py-3 !text-sm"
-              aria-label="Start your journey with the Noble Quran"
+              aria-label={t("hero.startBtn")}
             >
-              Start Your Journey
-              <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
+              {t("hero.startBtn")}
+              <ArrowRight size={16} strokeWidth={2} className="rtl-flip" aria-hidden="true" />
             </Button>
           </div>
         </div>
@@ -107,13 +109,13 @@ export function Hero({ onExplore, onStart }: HeroProps) {
           className="mx-auto mt-10 sm:mt-14 grid max-w-2xl grid-cols-4 divide-x divide-ink-200/80 overflow-hidden rounded-2xl sm:rounded-3xl border border-ink-200/80 bg-white/80 shadow-[0_10px_30px_-18px_rgba(31,31,31,0.12)] backdrop-blur animate-fade-in-up rtl:divide-x-reverse"
           style={{ animationDelay: "380ms" }}
         >
-          {STATS.map((s) => (
-            <div key={s.labelEn} className="flex flex-col items-center gap-0.5 px-1 sm:px-2 py-3.5 sm:py-5">
+          {stats.map((s) => (
+            <div key={s.label} className="flex flex-col items-center gap-0.5 px-1 sm:px-2 py-3.5 sm:py-5">
               <dd className="font-quran text-xl sm:text-2xl md:text-3xl font-bold text-gradient-gold">
-                {s.valueAr}
+                {s.value}
               </dd>
               <dt className="text-[8px] sm:text-[9.5px] font-bold uppercase tracking-wider text-ink-500 text-center truncate max-w-full">
-                {s.labelEn}
+                {s.label}
               </dt>
             </div>
           ))}

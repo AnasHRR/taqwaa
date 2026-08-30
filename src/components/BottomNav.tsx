@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { BookOpen, Compass, Heart, Home, MoreHorizontal } from "lucide-react";
 import type { Page } from "./Header";
+import { useTranslation } from "../i18n";
 import { cn } from "../utils/cn";
 
 export interface BottomNavProps {
@@ -10,30 +11,24 @@ export interface BottomNavProps {
   isMoreOpen?: boolean;
 }
 
-interface NavItemDef {
-  id: Page | "more";
-  labelAr: string;
-  labelEn: string;
-  icon: typeof Home;
-}
-
-const ITEMS: NavItemDef[] = [
-  { id: "home", labelAr: "الرئيسية", labelEn: "Home", icon: Home },
-  { id: "quran", labelAr: "القرآن", labelEn: "Quran", icon: BookOpen },
-  { id: "salaat", labelAr: "الصلاة", labelEn: "Prayer", icon: Compass },
-  { id: "dua", labelAr: "الأذكار", labelEn: "Azkar", icon: Heart },
-  { id: "more", labelAr: "المزيد", labelEn: "More", icon: MoreHorizontal },
-];
-
 export function BottomNav({
   activePage,
   onNavigate,
   onOpenMore,
   isMoreOpen = false,
 }: BottomNavProps) {
+  const { t, isRTL } = useTranslation();
   const [scrollHidden, setScrollHidden] = useState(false);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
+
+  const items = [
+    { id: "home" as const, label: t("nav.home"), icon: Home },
+    { id: "quran" as const, label: t("nav.quran"), icon: BookOpen },
+    { id: "salaat" as const, label: t("nav.prayer"), icon: Compass },
+    { id: "dua" as const, label: t("nav.azkar"), icon: Heart },
+    { id: "more" as const, label: t("nav.more"), icon: MoreHorizontal },
+  ];
 
   // Scroll-aware: subtle shift down when scrolling down, reappear on scroll up
   const handleScroll = useCallback(() => {
@@ -59,7 +54,7 @@ export function BottomNav({
   }, [handleScroll]);
 
   // Find the active index for the sliding pill
-  const activeIndex = ITEMS.findIndex((item) => {
+  const activeIndex = items.findIndex((item) => {
     if (item.id === "more") return isMoreOpen;
     return activePage === item.id && !isMoreOpen;
   });
@@ -72,9 +67,12 @@ export function BottomNav({
     }
   };
 
+  // Compute translateX offset taking RTL into account
+  const pillTranslateX = isRTL ? -activeIndex * 100 : activeIndex * 100;
+
   return (
     <nav
-      aria-label="Mobile Navigation"
+      aria-label={t("nav.more")}
       className={cn(
         "floating-nav-root",
         scrollHidden && "floating-nav-hidden"
@@ -90,13 +88,13 @@ export function BottomNav({
             className="floating-nav-active-pill"
             aria-hidden="true"
             style={{
-              transform: `translateX(${activeIndex * 100}%)`,
+              transform: `translateX(${pillTranslateX}%)`,
             }}
           />
         )}
 
         {/* Navigation items */}
-        {ITEMS.map((item, index) => {
+        {items.map((item) => {
           const isMore = item.id === "more";
           const isActive = isMore
             ? isMoreOpen
@@ -108,7 +106,7 @@ export function BottomNav({
               key={item.id}
               type="button"
               onClick={() => handleClick(item.id)}
-              aria-label={`${item.labelEn} — ${item.labelAr}`}
+              aria-label={item.label}
               aria-current={isActive ? "page" : undefined}
               className={cn(
                 "floating-nav-btn",
@@ -134,7 +132,7 @@ export function BottomNav({
                     : "floating-nav-label-hidden"
                 )}
               >
-                {item.labelEn}
+                {item.label}
               </span>
             </button>
           );

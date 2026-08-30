@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import {
-  BookOpen, Compass, ExternalLink, Heart, Info,
-  Mail, MapPin, Moon, Sparkles, X, ShieldCheck
+  BookOpen, Compass, Globe, Heart, Info,
+  Mail, MapPin, Sparkles, X, ShieldCheck
 } from "lucide-react";
 import type { Page } from "./Header";
 import { CrescentMoon } from "./CrescentMoon";
+import { LanguageSelector } from "./LanguageSelector";
 import { MOROCCAN_CITIES } from "../constants";
+import { useTranslation } from "../i18n";
 import type { City } from "../types";
 import { cn } from "../utils/cn";
 
@@ -24,6 +26,8 @@ export function MoreSheet({
   selectedCity,
   onSelectCity,
 }: MoreSheetProps) {
+  const { t, isRTL, language } = useTranslation();
+
   // Lock body scroll when open
   useEffect(() => {
     if (!isOpen) return;
@@ -46,7 +50,7 @@ export function MoreSheet({
   };
 
   return (
-    <div className="fixed inset-0 z-[80] block md:hidden" role="dialog" aria-modal="true" aria-label="المزيد من الخيارات">
+    <div className="fixed inset-0 z-[80] block md:hidden" role="dialog" aria-modal="true" aria-label={t("nav.more")}>
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-ink-950/50 backdrop-blur-sm animate-fade-in transition-opacity"
@@ -55,7 +59,7 @@ export function MoreSheet({
       />
 
       {/* Slide-up sheet */}
-      <div className="safe-bottom fixed bottom-0 inset-x-0 z-[85] max-h-[85dvh] flex flex-col rounded-t-[28px] border-t border-gold-500/30 bg-white shadow-2xl animate-slide-up overflow-hidden">
+      <div className="safe-bottom fixed bottom-0 inset-x-0 z-[85] max-h-[88dvh] flex flex-col rounded-t-[28px] border-t border-gold-500/30 bg-white shadow-2xl animate-slide-up overflow-hidden">
         {/* Grab handle */}
         <div className="flex items-center justify-center pt-3 pb-1" aria-hidden="true">
           <span className="h-1.5 w-12 rounded-full bg-ink-200" />
@@ -68,13 +72,17 @@ export function MoreSheet({
               <CrescentMoon className="h-5 w-5" />
             </span>
             <div>
-              <h2 className="font-arabic text-base font-bold text-ink-900 leading-tight">المزيد · More</h2>
-              <p className="text-[10px] font-semibold text-ink-500 uppercase tracking-wider">Taqwaa Services</p>
+              <h2 className="text-base font-bold text-ink-900 leading-tight">
+                {t("nav.more")} · {t("common.appName")}
+              </h2>
+              <p className="text-[10px] font-semibold text-ink-500 uppercase tracking-wider">
+                {t("common.tagline")}
+              </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            aria-label="إغلاق"
+            aria-label={t("common.close")}
             className="icon-btn h-9 w-9 rounded-full bg-ink-50 text-ink-600 hover:bg-ink-100"
           >
             <X size={17} />
@@ -83,19 +91,36 @@ export function MoreSheet({
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5 text-start">
+          {/* Language Selector Section */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="flex items-center gap-1.5 text-xs font-bold text-gold-800">
+                <Globe size={14} className="text-gold-600" />
+                {t("common.language")} · {t("common.selectLanguage")}
+              </span>
+              <span className="text-[10px] font-bold text-ink-400 uppercase tracking-wider">
+                FR · EN · AR
+              </span>
+            </div>
+            <LanguageSelector variant="sheet-list" />
+          </div>
+
+          <div className="divider-gold opacity-50" />
+
           {/* Quick Moroccan City Bar */}
           {onSelectCity && (
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="flex items-center gap-1.5 font-arabic text-xs font-bold text-gold-800">
+                <span className="flex items-center gap-1.5 text-xs font-bold text-gold-800">
                   <MapPin size={13} className="text-gold-600" />
-                  مدينتك الحالية
+                  {t("common.currentCity")}
                 </span>
-                <span className="text-[10px] text-ink-400 font-medium">Morocco</span>
+                <span className="text-[10px] text-ink-400 font-medium">{t("common.morocco")}</span>
               </div>
               <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
                 {MOROCCAN_CITIES.slice(0, 8).map((city) => {
                   const isSelected = selectedCity?.name === city.name;
+                  const cityName = language === "ar" ? city.nameAr : city.name;
                   return (
                     <button
                       key={city.name}
@@ -105,7 +130,7 @@ export function MoreSheet({
                         isSelected && "chip-active font-bold"
                       )}
                     >
-                      {city.nameAr}
+                      {cityName}
                     </button>
                   );
                 })}
@@ -122,8 +147,8 @@ export function MoreSheet({
               <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gold-100 text-gold-700 mb-2">
                 <Info size={16} />
               </span>
-              <span className="font-arabic text-sm font-bold text-ink-900">حول المنصة</span>
-              <span className="text-[10px] text-ink-500 mt-0.5">About Taqwaaa</span>
+              <span className="text-sm font-bold text-ink-900">{t("nav.about")}</span>
+              <span className="text-[10px] text-ink-500 mt-0.5">{t("about.tagline")}</span>
             </button>
 
             <button
@@ -133,8 +158,8 @@ export function MoreSheet({
               <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gold-100 text-gold-700 mb-2">
                 <Compass size={16} />
               </span>
-              <span className="font-arabic text-sm font-bold text-ink-900">دليل الصلاة والوضوء</span>
-              <span className="text-[10px] text-ink-500 mt-0.5">Prayer & Wudu Guide</span>
+              <span className="text-sm font-bold text-ink-900">{t("prayerGuide.title")}</span>
+              <span className="text-[10px] text-ink-500 mt-0.5">{t("nav.prayer")}</span>
             </button>
 
             <button
@@ -144,8 +169,8 @@ export function MoreSheet({
               <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gold-100 text-gold-700 mb-2">
                 <Sparkles size={16} />
               </span>
-              <span className="font-arabic text-sm font-bold text-ink-900">المسبحة الإلكترونية</span>
-              <span className="text-[10px] text-ink-500 mt-0.5">Digital Tasbeeh</span>
+              <span className="text-sm font-bold text-ink-900">{t("azkar.tasbeehTitle")}</span>
+              <span className="text-[10px] text-ink-500 mt-0.5">{t("nav.azkar")}</span>
             </button>
 
             <button
@@ -155,8 +180,8 @@ export function MoreSheet({
               <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-gold-100 text-gold-700 mb-2">
                 <BookOpen size={16} />
               </span>
-              <span className="font-arabic text-sm font-bold text-ink-900">تلاوة وسور القرآن</span>
-              <span className="text-[10px] text-ink-500 mt-0.5">114 Surahs</span>
+              <span className="text-sm font-bold text-ink-900">{t("quran.title")}</span>
+              <span className="text-[10px] text-ink-500 mt-0.5">114 {t("hero.statsSurahs")}</span>
             </button>
           </div>
 
@@ -164,10 +189,10 @@ export function MoreSheet({
           <div className="card-beige p-4 rounded-2xl">
             <div className="flex items-center gap-2 mb-1.5">
               <ShieldCheck size={16} className="text-gold-700" />
-              <span className="font-arabic text-xs font-bold text-gold-900">الخصوصية والأمان</span>
+              <span className="text-xs font-bold text-gold-900">{t("common.privacySecurity")}</span>
             </div>
             <p className="text-xs text-ink-600 leading-relaxed">
-              تقوى منصة إسلامية مجانية وخالية من الإعلانات تماماً. لا يتم جمع أي بيانات شخصية وتعمل جميع التفضيلات محلياً على هاتفك.
+              {t("common.privacyNote")}
             </p>
           </div>
 
@@ -177,12 +202,12 @@ export function MoreSheet({
             className="btn btn-secondary w-full !py-2.5 !text-xs !justify-center !rounded-xl"
           >
             <Mail size={14} className="text-gold-600" />
-            <span>تواصل معنا · contact@taqwaa.app</span>
+            <span>{t("common.contactUs")} · contact@taqwaa.app</span>
           </a>
 
           {/* Footer note */}
-          <p className="text-center font-arabic text-[11px] text-ink-400 pb-2">
-            صُنع بِمحبّة في المملكة المغربية 🇲🇦 · تقوى Taqwaa
+          <p className="text-center text-[11px] text-ink-400 pb-2">
+            {t("common.madeWithLove")} · {t("common.appName")}
           </p>
         </div>
       </div>

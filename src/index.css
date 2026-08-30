@@ -33,7 +33,7 @@
 
   /* ===== FONTS ===== */
   --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-arabic: "Cairo", "Manrope", ui-sans-serif, sans-serif;
+  --font-arabic: "Cairo", "Tajawal", "Manrope", ui-sans-serif, sans-serif;
   --font-quran: "Amiri", "Noto Naskh Arabic", serif;
 }
 
@@ -57,6 +57,18 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body.font-arabic {
+  font-family: var(--font-arabic);
+}
+
+body.font-latin {
+  font-family: var(--font-sans);
+}
+
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
 }
 
 :focus-visible {
@@ -542,7 +554,7 @@ input[type="text"] { font-family: inherit; }
   position: absolute;
   top: 6px;
   bottom: 6px;
-  left: 6px;
+  inset-inline-start: 6px;
   /* width = 1/5 of the pill interior minus some padding */
   width: calc((100% - 12px) / 5);
   border-radius: 999px;

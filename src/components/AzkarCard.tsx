@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { BookMarked, Check, Copy, Heart, Plus, RotateCcw } from "lucide-react";
 import type { ReactNode } from "react";
+import { useTranslation } from "../i18n";
 import { cn } from "../utils/cn";
 
 export interface DuaItem {
@@ -22,6 +23,7 @@ interface AzkarCardProps {
 }
 
 export function AzkarCard({ dua, index, isFavorite, onToggleFavorite }: AzkarCardProps) {
+  const { t, language, formatNumber } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [count, setCount] = useState(0);
 
@@ -42,6 +44,12 @@ export function AzkarCard({ dua, index, isFavorite, onToggleFavorite }: AzkarCar
     }
   };
 
+  // Localized title & translation
+  const localizedTitle =
+    t<Record<number, string>>("azkar.duaTitles")?.[dua.id] || dua.titleAr;
+  const localizedTranslation =
+    t<Record<number, string>>("azkar.duaTranslations")?.[dua.id] || dua.textEn;
+
   return (
     <article
       className={cn(
@@ -57,8 +65,8 @@ export function AzkarCard({ dua, index, isFavorite, onToggleFavorite }: AzkarCar
             {dua.catIcon}
           </span>
           <div className="min-w-0">
-            <h3 className="truncate font-arabic text-sm sm:text-base font-bold text-ink-900" dir="rtl">
-              {dua.titleAr}
+            <h3 className="truncate text-sm sm:text-base font-bold text-ink-900">
+              {localizedTitle}
             </h3>
             <p className="mt-0.5 flex items-center gap-1 text-[9.5px] sm:text-[10px] font-semibold uppercase tracking-wider text-ink-500">
               <BookMarked size={10} className="text-gold-600 shrink-0" aria-hidden="true" />
@@ -70,8 +78,9 @@ export function AzkarCard({ dua, index, isFavorite, onToggleFavorite }: AzkarCar
         {/* Actions */}
         <div className="flex shrink-0 items-center gap-1">
           <button
+            type="button"
             onClick={() => onToggleFavorite(dua.id)}
-            aria-label={isFavorite ? "إزالة من المفضلة" : "أضف إلى المفضلة"}
+            aria-label={isFavorite ? t("common.removeFromFavorites") : t("common.addToFavorites")}
             aria-pressed={isFavorite}
             className={cn(
               "icon-btn h-8 w-8 !rounded-lg",
@@ -81,8 +90,9 @@ export function AzkarCard({ dua, index, isFavorite, onToggleFavorite }: AzkarCar
             <Heart size={14} fill={isFavorite ? "currentColor" : "none"} />
           </button>
           <button
+            type="button"
             onClick={handleCopy}
-            aria-label="نسخ الذكر"
+            aria-label={t("common.copy")}
             className={cn("icon-btn h-8 w-8 !rounded-lg", copied && "icon-btn-active")}
           >
             {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -90,7 +100,7 @@ export function AzkarCard({ dua, index, isFavorite, onToggleFavorite }: AzkarCar
         </div>
       </div>
 
-      {/* Arabic text */}
+      {/* Arabic text - Always preserved in pristine Arabic typography */}
       <p
         className="mt-3.5 font-quran text-base sm:text-lg md:text-xl leading-[2.2] sm:leading-[2.4] text-ink-900"
         dir="rtl"
@@ -99,11 +109,15 @@ export function AzkarCard({ dua, index, isFavorite, onToggleFavorite }: AzkarCar
         {dua.textAr}
       </p>
 
-      {/* Translation */}
-      <p className="mt-2.5 border-s-2 border-gold-400/50 ps-2.5 text-xs sm:text-sm italic leading-relaxed text-ink-600">
-        "{dua.textEn}"
-      </p>
-      <p className="mt-1 ps-2.5 font-arabic text-[9.5px] text-ink-400">{dua.transliteration}</p>
+      {/* Translation & Transliteration (when not Arabic) */}
+      {language !== "ar" && (
+        <>
+          <p className="mt-2.5 border-s-2 border-gold-400/50 ps-2.5 text-xs sm:text-sm italic leading-relaxed text-ink-600">
+            "{localizedTranslation}"
+          </p>
+          <p className="mt-1 ps-2.5 text-[9.5px] text-ink-400">{dua.transliteration}</p>
+        </>
+      )}
 
       <div className="divider-gold my-3.5" />
 
@@ -113,26 +127,28 @@ export function AzkarCard({ dua, index, isFavorite, onToggleFavorite }: AzkarCar
           className="rounded-full bg-gold-50 border border-gold-500/20 px-2.5 py-1 font-mono text-xs font-bold tabular-nums text-gold-800"
           aria-live="polite"
         >
-          {count > 0 ? `${count} ×` : "—"}
+          {count > 0 ? `${formatNumber(count)} ×` : "—"}
         </span>
         <div className="flex items-center gap-1.5">
           {count > 0 && (
             <button
+              type="button"
               onClick={() => setCount(0)}
-              aria-label="تصفير العداد"
+              aria-label={t("common.reset")}
               className="icon-btn h-8 w-8 !rounded-lg text-ink-400 hover:text-ink-700"
-              title="تصفير"
+              title={t("common.reset")}
             >
               <RotateCcw size={13} />
             </button>
           )}
           <button
+            type="button"
             onClick={handleIncrement}
             className="btn btn-primary btn-sm cursor-pointer !py-1.5 !px-4 !text-xs touch-active shadow-xs"
-            aria-label={`عدّ تكرار ${dua.titleAr}`}
+            aria-label={`${t("azkar.tasbeehBtn")} ${localizedTitle}`}
           >
             <Plus size={14} strokeWidth={2.5} />
-            <span className="font-arabic font-bold">سبّح</span>
+            <span className="font-bold">{t("azkar.tasbeehBtn")}</span>
           </button>
         </div>
       </div>
@@ -140,11 +156,11 @@ export function AzkarCard({ dua, index, isFavorite, onToggleFavorite }: AzkarCar
       {/* Copied toast */}
       {copied && (
         <span
-          className="absolute end-3.5 top-12 inline-flex animate-fade-in items-center gap-1 rounded-full bg-pine-800 px-2.5 py-1 font-arabic text-[9.5px] font-bold text-white shadow-lg"
+          className="absolute end-3.5 top-12 inline-flex animate-fade-in items-center gap-1 rounded-full bg-pine-800 px-2.5 py-1 text-[9.5px] font-bold text-white shadow-lg"
           role="status"
         >
           <Check size={11} />
-          تم النسخ
+          {t("common.copied")}
         </span>
       )}
     </article>

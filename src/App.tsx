@@ -90,6 +90,10 @@ export function App() {
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [pageKey, setPageKey] = useState(0);
 
+  const onFinishSplash = useCallback(() => {
+    setShowSplash(false);
+  }, []);
+
   const [selectedCity, setSelectedCity] = useState<City>(() => {
     try {
       const saved = localStorage.getItem("taqwaa-city");
@@ -178,7 +182,7 @@ export function App() {
       {/* Ambient background */}
       <div className="bg-app-canvas pointer-events-none fixed inset-0" aria-hidden="true" />
 
-      {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
+      {showSplash && <SplashScreen onFinish={onFinishSplash} />}
 
       {/* Top Header (Mobile Simplified / Desktop Full) */}
       <Header

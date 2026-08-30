@@ -1,4 +1,5 @@
 import { Bookmark } from "lucide-react";
+import { useTranslation } from "../i18n";
 
 export interface Surah {
   number: number;
@@ -15,10 +16,8 @@ interface QuranCardProps {
   onSelect: (number: number) => void;
 }
 
-const toArabicNumber = (n: number): string =>
-  String(n).replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[Number(d)]);
-
 export function QuranCard({ surah, index, onSelect }: QuranCardProps) {
+  const { t, formatNumber, isRTL } = useTranslation();
   const isMeccan = surah.revelationType === "Meccan";
 
   return (
@@ -26,7 +25,7 @@ export function QuranCard({ surah, index, onSelect }: QuranCardProps) {
       onClick={() => onSelect(surah.number)}
       className="card card-hover group flex w-full cursor-pointer items-center justify-between gap-2.5 sm:gap-3.5 p-3.5 sm:p-4 text-start animate-fade-in-up transition-all"
       style={{ animationDelay: `${Math.min(index * 20, 300)}ms` }}
-      aria-label={`سورة ${surah.name} — ${surah.englishName}`}
+      aria-label={`${t("quran.surahNumber")} ${surah.name} — ${surah.englishName}`}
     >
       <div className="flex min-w-0 items-center gap-2.5 sm:gap-3.5">
         {/* Octagram number badge */}
@@ -35,7 +34,7 @@ export function QuranCard({ surah, index, onSelect }: QuranCardProps) {
           aria-hidden="true"
         >
           <span className="font-arabic text-xs sm:text-sm font-bold text-gold-700">
-            {toArabicNumber(surah.number)}
+            {formatNumber(surah.number)}
           </span>
         </span>
 
@@ -53,17 +52,17 @@ export function QuranCard({ surah, index, onSelect }: QuranCardProps) {
 
       <div className="flex shrink-0 flex-col items-end gap-1">
         <span
-          className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 font-arabic text-[8.5px] sm:text-[9px] font-bold ${
+          className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[8.5px] sm:text-[9px] font-bold ${
             isMeccan
               ? "border-gold-500/30 bg-gold-50 text-gold-700"
               : "border-pine-700/25 bg-pine-800/[0.06] text-pine-700"
           }`}
         >
           <Bookmark size={8} aria-hidden="true" />
-          {isMeccan ? "مكية" : "مدنية"}
+          {isMeccan ? t("quran.meccan") : t("quran.medinan")}
         </span>
-        <span className="font-arabic text-[9.5px] sm:text-[10px] font-semibold text-ink-400" dir="rtl">
-          {toArabicNumber(surah.numberOfAyahs)} آية
+        <span className="text-[9.5px] sm:text-[10px] font-semibold text-ink-400">
+          {formatNumber(surah.numberOfAyahs)} {t("quran.ayahsCount")}
         </span>
       </div>
     </button>
