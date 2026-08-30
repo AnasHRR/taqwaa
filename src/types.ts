@@ -24,18 +24,6 @@ export interface GregorianDate {
   year: string;
 }
 
-export interface ApiResponse {
-  code: number;
-  status: string;
-  data: {
-    timings: PrayerTimes;
-    date: {
-      hijri: HijriDate;
-      gregorian: GregorianDate;
-    };
-  };
-}
-
 export interface City {
   name: string;
   nameAr: string;

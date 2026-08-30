@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { ApiResponse, PrayerTimes, HijriDate, GregorianDate } from "../types";
+import { PrayerTimes, HijriDate, GregorianDate } from "../types";
 import { City } from "../types";
+import { calculatePrayerTimes } from "../data/prayer";
 
 interface UsePrayerTimesReturn {
   prayerTimes: PrayerTimes | null;
@@ -18,35 +19,18 @@ export function usePrayerTimes(city: City): UsePrayerTimesReturn {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchPrayerTimes = useCallback(async () => {
+  const fetchPrayerTimes = useCallback(() => {
     setLoading(true);
     setError(null);
     try {
-      const today = new Date();
-      const dd = String(today.getDate()).padStart(2, "0");
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const yyyy = today.getFullYear();
-      const dateStr = `${dd}-${mm}-${yyyy}`;
-
-      const url = `https://api.aladhan.com/v1/timings/${dateStr}?latitude=${city.lat}&longitude=${city.lng}&method=21&school=0`;
-
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Failed to fetch prayer times");
-      }
-
-      const data: ApiResponse = await response.json();
-
-      if (data.code === 200) {
-        setPrayerTimes(data.data.timings);
-        setHijriDate(data.data.date.hijri);
-        setGregorianDate(data.data.date.gregorian);
-      } else {
-        throw new Error("API returned error");
-      }
+      const now = new Date();
+      const result = calculatePrayerTimes(city, now);
+      setPrayerTimes(result.prayerTimes);
+      setHijriDate(result.hijriDate);
+      setGregorianDate(result.gregorianDate);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "حدث خطأ في جلب مواقيت الصلاة"
+        err instanceof Error ? err.message : "حدث خطأ في حساب مواقيت الصلاة"
       );
     } finally {
       setLoading(false);

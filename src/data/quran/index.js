@@ -1,0 +1,1 @@
+export { getSurahs, getSurah, getAyahs, searchSurahs } from './quranService.js';

@@ -7,6 +7,7 @@ import { DAILY_VERSES } from "../constants";
 import { QuranCard, type Surah } from "../components/QuranCard";
 import { useTranslation } from "../i18n";
 import { cn } from "../utils/cn";
+import { getSurahs, getAyahs, searchSurahs } from "../data/quran";
 
 type RevelationFilter = "all" | "Meccan" | "Medinan";
 
@@ -39,28 +40,18 @@ export function QuranPage() {
   ];
 
   useEffect(() => {
-    fetch("https://api.alquran.cloud/v1/surah")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.code === 200) setSurahs(data.data);
-      })
-      .catch(() => {})
-      .finally(() => setLoadingSurahs(false));
+    const loadedSurahs = getSurahs();
+    setSurahs(loadedSurahs);
+    setLoadingSurahs(false);
   }, []);
 
-  const loadSurah = async (num: number) => {
+  const loadSurah = (num: number) => {
     setSelectedSurah(num);
     setLoadingAyahs(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
-    try {
-      const res = await fetch(`https://api.alquran.cloud/v1/surah/${num}/ar.alafasy`);
-      const data = await res.json();
-      if (data.code === 200) setAyahs(data.data.ayahs);
-    } catch {
-      /* silent */
-    } finally {
-      setLoadingAyahs(false);
-    }
+    const loadedAyahs = getAyahs(num);
+    setAyahs(loadedAyahs);
+    setLoadingAyahs(false);
   };
 
   const showToast = (msg: string) => {
@@ -79,6 +70,7 @@ export function QuranPage() {
           s.name.includes(query) ||
           s.englishName.toLowerCase().includes(query) ||
           s.englishNameTranslation.toLowerCase().includes(query) ||
+          (s as any).nameFr?.toLowerCase().includes(query) ||
           s.number.toString() === query
         );
       }),
