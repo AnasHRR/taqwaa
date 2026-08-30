@@ -80,7 +80,7 @@ export function Hero({ onExplore, onStart }: HeroProps) {
               aria-label="Explore Taqwaa features"
             >
               <Compass size={16} strokeWidth={2} aria-hidden="true" />
-              Explore Taqwaaa
+              Explore Taqwaa
             </Button>
             <Button
               variant="secondary"

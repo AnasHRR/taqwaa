@@ -1,25 +1,150 @@
 <!doctype html>
-<html lang="ar" dir="ltr">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Taqwaa" />
+    <meta name="application-name" content="Taqwaa" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#FAF9F6" />
+    <meta name="msapplication-TileColor" content="#C9A227" />
+
+    <!-- Favicons & Icons -->
     <link rel="icon" type="image/png" href="/icone.png" />
     <link rel="apple-touch-icon" href="/icone.png" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Primary Meta Tags -->
+    <title>Taqwaa — أوقات الصلاة، القرآن الكريم والأذكار</title>
+    <meta
+      name="title"
+      content="Taqwaa — أوقات الصلاة، القرآن الكريم والأذكار"
+    />
     <meta
       name="description"
-      content="تقوى - مواقيت الصلاة والقرآن الكريم والأذكار | Taqwaa - Prayer times, Noble Quran, Azkar and Islamic content in one peaceful place."
+      content="تقوى Taqwaa منصة إسلامية مغربية تساعدك على متابعة أوقات الصلاة، قراءة القرآن الكريم، الأذكار والمزيد في تجربة بسيطة وعصرية."
     />
-    <title>تقوى | Taqwaa — Your Journey Towards Faith & Knowledge</title>
+    <meta
+      name="keywords"
+      content="Taqwaa, Taqwaa Maroc, تقوى, تطبيق تقوى, أوقات الصلاة المغرب, مواقيت الصلاة, مواقيت الصلاة في المغرب, القرآن الكريم, الأذكار, الصلاة, Islamic prayer times Morocco, Morocco prayer times, Adhkar, Quran online"
+    />
+    <meta name="author" content="Anas Lagziri" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://taqwaa.app/" />
+
+    <!-- Language Alternates -->
+    <link rel="alternate" hreflang="ar" href="https://taqwaa.app/" />
+    <link rel="alternate" hreflang="fr" href="https://taqwaa.app/" />
+    <link rel="alternate" hreflang="en" href="https://taqwaa.app/" />
+    <link rel="alternate" hreflang="x-default" href="https://taqwaa.app/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://taqwaa.app/" />
+    <meta property="og:site_name" content="Taqwaa" />
+    <meta property="og:title" content="Taqwaa — أوقات الصلاة، القرآن الكريم والأذكار" />
+    <meta
+      property="og:description"
+      content="تقوى Taqwaa منصة إسلامية مغربية تساعدك على متابعة أوقات الصلاة، قراءة القرآن الكريم، الأذكار والمزيد في تجربة بسيطة وعصرية."
+    />
+    <meta property="og:image" content="https://taqwaa.app/icone.png" />
+    <meta property="og:image:width" content="512" />
+    <meta property="og:image:height" content="512" />
+    <meta property="og:image:alt" content="Taqwaa — تقوى" />
+    <meta property="og:locale" content="ar_MA" />
+    <meta property="og:locale:alternate" content="fr_MA" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:url" content="https://taqwaa.app/" />
+    <meta name="twitter:title" content="Taqwaa — أوقات الصلاة، القرآن الكريم والأذكار" />
+    <meta
+      name="twitter:description"
+      content="تقوى Taqwaa منصة إسلامية مغربية تساعدك على متابعة أوقات الصلاة، قراءة القرآن الكريم، الأذكار والمزيد في تجربة بسيطة وعصرية."
+    />
+    <meta name="twitter:image" content="https://taqwaa.app/icone.png" />
+    <meta name="twitter:image:alt" content="Taqwaa — تقوى" />
+
+    <!-- Google Search Console Verification (Replace content with your verification code) -->
+    <meta name="google-site-verification" content="GSC_VERIFICATION_CODE_PLACEHOLDER" />
+
+    <!-- Google Fonts Optimization -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800;900&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Static Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "@id": "https://taqwaa.app/#website",
+          "name": "Taqwaa",
+          "alternateName": ["تقوى", "Taqwaa Maroc", "منصة تقوى", "تطبيق تقوى"],
+          "url": "https://taqwaa.app/",
+          "inLanguage": ["ar", "fr", "en"],
+          "description": "منصة إسلامية مغربية حديثة لمتابعة أوقات الصلاة والقرآن الكريم والأذكار",
+          "publisher": {
+            "@type": "Organization",
+            "@id": "https://taqwaa.app/#organization",
+            "name": "Taqwaa",
+            "url": "https://taqwaa.app/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://taqwaa.app/icone.png",
+              "width": "512",
+              "height": "512"
+            }
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "@id": "https://taqwaa.app/#organization",
+          "name": "Taqwaa",
+          "alternateName": "تقوى",
+          "url": "https://taqwaa.app/",
+          "logo": "https://taqwaa.app/icone.png",
+          "founder": {
+            "@type": "Person",
+            "name": "Anas Lagziri"
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "contact@taqwaa.app",
+            "contactType": "customer support",
+            "availableLanguage": ["Arabic", "French", "English"]
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "@id": "https://taqwaa.app/#app",
+          "name": "Taqwaa — تقوى",
+          "url": "https://taqwaa.app/",
+          "applicationCategory": "LifestyleApplication",
+          "operatingSystem": "All",
+          "browserRequirements": "Requires JavaScript. Requires HTML5.",
+          "inLanguage": ["ar", "fr", "en"],
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "MAD"
+          }
+        }
+      ]
+    </script>
+
     <style>
       html { background: #faf9f6; }
       body { background: #faf9f6; margin: 0; overflow-x: hidden; }
@@ -27,6 +152,13 @@
     </style>
   </head>
   <body>
+    <noscript>
+      <div style="font-family: sans-serif; text-align: center; padding: 40px 20px; direction: rtl;">
+        <h1 style="color: #c9a227;">تقوى — Taqwaa</h1>
+        <p>منصة إسلامية مغربية شاملة لمتابعة أوقات الصلاة الدقيقة، قراءة القرآن الكريم، والاستماع إلى التلاوات، وحصن المسلم من الأذكار والأدعية اليومية.</p>
+        <p>يرجى تفعيل الجافاسكربت في المتصفح للاستفادة الكاملة من كافة مميزات منصة تقوى.</p>
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

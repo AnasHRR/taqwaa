@@ -69,7 +69,7 @@ export function MoreSheet({
             </span>
             <div>
               <h2 className="font-arabic text-base font-bold text-ink-900 leading-tight">المزيد · More</h2>
-              <p className="text-[10px] font-semibold text-ink-500 uppercase tracking-wider">Taqwaaa Services</p>
+              <p className="text-[10px] font-semibold text-ink-500 uppercase tracking-wider">Taqwaa Services</p>
             </div>
           </div>
           <button
@@ -182,7 +182,7 @@ export function MoreSheet({
 
           {/* Footer note */}
           <p className="text-center font-arabic text-[11px] text-ink-400 pb-2">
-            صُنع بِمحبّة في المملكة المغربية 🇲🇦 · تقوى Taqwaaa
+            صُنع بِمحبّة في المملكة المغربية 🇲🇦 · تقوى Taqwaa
           </p>
         </div>
       </div>

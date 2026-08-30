@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Homepage -->
+  <url>
+    <loc>https://taqwaa.app/</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://taqwaa.app/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://taqwaa.app/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://taqwaa.app/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://taqwaa.app/" />
+  </url>
+
+  <!-- Prayer Times / Salaat -->
+  <url>
+    <loc>https://taqwaa.app/salaat</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://taqwaa.app/salaat" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://taqwaa.app/salaat" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://taqwaa.app/salaat" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://taqwaa.app/salaat" />
+  </url>
+
+  <!-- Quran -->
+  <url>
+    <loc>https://taqwaa.app/quran</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://taqwaa.app/quran" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://taqwaa.app/quran" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://taqwaa.app/quran" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://taqwaa.app/quran" />
+  </url>
+
+  <!-- Azkar & Duas -->
+  <url>
+    <loc>https://taqwaa.app/dua</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://taqwaa.app/dua" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://taqwaa.app/dua" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://taqwaa.app/dua" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://taqwaa.app/dua" />
+  </url>
+
+  <!-- About & Contact -->
+  <url>
+    <loc>https://taqwaa.app/about</loc>
+    <lastmod>2026-08-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://taqwaa.app/about" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://taqwaa.app/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://taqwaa.app/about" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://taqwaa.app/about" />
+  </url>
+</urlset>

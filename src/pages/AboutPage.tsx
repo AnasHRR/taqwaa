@@ -1,4 +1,4 @@
-import { BookOpen, Clock3, Heart, Mail, MapPin, MoonStar, ShieldCheck } from "lucide-react";
+import { BookOpen, Clock3, Heart, HelpCircle, Mail, MapPin, MoonStar, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 import { Button } from "../components/Button";
 import { CrescentMoon } from "../components/CrescentMoon";
@@ -11,10 +11,29 @@ interface AboutPageProps {
 }
 
 const FEATURES: { icon: ReactNode; titleAr: string; desc: string }[] = [
-  { icon: <Clock3 size={18} />, titleAr: "مواقيت دقيقة", desc: "Prayer times for 22 Moroccan cities via the trusted Aladhan API." },
-  { icon: <BookOpen size={18} />, titleAr: "قرآن كريم", desc: "The full Mushaf with verified text from the AlQuran Cloud API." },
-  { icon: <Heart size={18} />, titleAr: "أذكار صحيحة", desc: "Authentic azkar and duas referenced from Sahih sources." },
-  { icon: <ShieldCheck size={18} />, titleAr: "خصوصية كاملة", desc: "No accounts, no tracking — your data stays on your device." },
+  { icon: <Clock3 size={18} />, titleAr: "مواقيت دقيقة للمغرب", desc: "أوقات الصلاة لأكثر من 22 مدينة مغربية مطابقة لحسابات وزارة الأوقاف والشؤون الإسلامية عبر واجهة Aladhan." },
+  { icon: <BookOpen size={18} />, titleAr: "القرآن الكريم كاملاً", desc: "المصحف الشريف كاملاً ١١٤ سورة مع التلاوات الصوتية والتفسير الميسر عبر AlQuran Cloud." },
+  { icon: <Heart size={18} />, titleAr: "أذكار وأدعية صحيحة", desc: "حصن المسلم وأذكار الصباح والمساء الموثقة بالأحاديث الصحيحة والمراجع المعتمدة." },
+  { icon: <ShieldCheck size={18} />, titleAr: "خصوصية وأمان تام", desc: "بدون إعلانات وبدون جمع بيانات — تفضيلاتك ومدينتك المفضلة محفوظة على جهازك فقط." },
+];
+
+const FAQS = [
+  {
+    q: "ما هي منصة تقوى (Taqwaa) وما الخدمات التي تقدمها؟",
+    a: "تقوى هي منصة وتطبيق إسلامي مغربي عصري يهدف إلى تيسير العبادة والذكر للمسلمين في المغرب والعالم عبر توفير مواقيت الصلاة الدقيقة، القرآن الكريم كاملاً تلاوة واستماعاً، وحصن المسلم من الأدعية والأذكار اليومية في واجهة سريعة وخالية من الإعلانات.",
+  },
+  {
+    q: "كيف يتم حساب مواقيت الصلاة في مدن المغرب؟",
+    a: "يتم حساب أوقات الصلاة وفق المعايير الحسابية المعتمدة رسمياً في المملكة المغربية لجميع المدن بما فيها الدار البيضاء، الرباط، مراكش، طنجة، فاس، أكادير، وجدة، مكناس، وتطوان.",
+  },
+  {
+    q: "هل تطبيق تقوى مجاني بالكامل؟",
+    a: "نعم، منصة وتطبيق تقوى مجاني تماماً 100% وبدون أي اشتراكات أو رسوم، وصُمم لوجه الله تعالى لخدمة المسلمين وتوفير بيئة عبادة نقية.",
+  },
+  {
+    q: "هل تعمل المنصة على الهواتف والأجهزة اللوحية؟",
+    a: "نعم، تم تصميم تقوى بتقنيات الويب المتقدمة ليكون متجاوباً وسريعاً وخفيفاً على كافة الهواتف الذكية (أندرويد وآيفون) والحواسيب اللوحية والمكتبية مع إمكانية التثبيت كتطبيق PWA.",
+  },
 ];
 
 export function AboutPage({ onNavigate }: AboutPageProps) {
@@ -30,19 +49,16 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
               وَذَكِّرْ فَإِنَّ الذِّكْرَىٰ تَنفَعُ الْمُؤْمِنِينَ
             </p>
             <p className="mt-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.24em] text-ink-500">
-              Adh-Dhariyat 55 · And remind, for reminders benefit the believers
+              سورة الذاريات ٥٥ · And remind, for reminders benefit the believers
             </p>
           </div>
 
-          <h1 className="max-w-xl text-balance text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight text-ink-900">
-            A peaceful companion for your{" "}
-            <span className="text-gradient-gold">spiritual journey</span>
+          <h1 className="max-w-2xl text-balance text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight text-ink-900">
+            حول منصة <span className="text-gradient-gold">تقوى — Taqwaa</span>
           </h1>
 
-          <p className="max-w-xl text-xs sm:text-sm md:text-base leading-relaxed text-ink-600">
-            Taqwaaa is a modern Islamic platform built with love in Morocco. We bring prayer
-            times, the Noble Quran and authentic remembrances together in one calm,
-            distraction-free place — beautiful on every phone, tablet and desktop.
+          <p className="max-w-2xl text-xs sm:text-sm md:text-base leading-relaxed text-ink-600">
+            تقوى (Taqwaa) منصة إسلامية مغربية حديثة صُممت لتقديم رفيق إيماني هادئ وموثوق. نجمع مواقيت الصلاة الدقيقة للمغرب، القرآن الكريم كاملاً، وحصن المسلم من الأدعية والأذكار في مكان واحد بلمسة جمالية وتجربة مستخدم سريعة وسلسة.
           </p>
         </div>
       </section>
@@ -57,9 +73,30 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                 <span className="octagram h-11 w-11 text-gold-700" aria-hidden="true">
                   {f.icon}
                 </span>
-                <h3 className="mt-3 font-arabic text-sm sm:text-base font-bold text-ink-900">{f.titleAr}</h3>
+                <h2 className="mt-3 font-arabic text-sm sm:text-base font-bold text-ink-900">{f.titleAr}</h2>
                 <p className="mt-1 text-xs sm:text-sm leading-relaxed text-ink-600">{f.desc}</p>
               </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ===== FAQ Section for SEO and Users ===== */}
+        <section className="pt-10 sm:pt-14" aria-labelledby="faq-heading">
+          <SectionTitle eyebrow="FAQ" title="Frequently Asked Questions" titleAr="الأسئلة الشائعة حول تقوى" />
+          <div className="mt-6 sm:mt-8 grid gap-3.5 sm:gap-4 max-w-4xl mx-auto">
+            {FAQS.map((faq, idx) => (
+              <details key={idx} className="card group p-4 sm:p-5 open:bg-white transition-all">
+                <summary className="flex cursor-pointer list-none items-center justify-between font-arabic text-xs sm:text-sm md:text-base font-bold text-ink-900 [&::-webkit-details-marker]:hidden">
+                  <span className="flex items-center gap-2">
+                    <HelpCircle size={16} className="text-gold-600 shrink-0" />
+                    {faq.q}
+                  </span>
+                  <span className="text-gold-700 font-bold transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
+                </summary>
+                <p className="mt-3 border-t border-ink-200/70 pt-3 text-xs sm:text-sm leading-relaxed text-ink-600">
+                  {faq.a}
+                </p>
+              </details>
             ))}
           </div>
         </section>
@@ -70,10 +107,9 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
             <IslamicPattern className="pointer-events-none absolute inset-0 h-full w-full" opacity={0.08} />
             <div className="relative">
               <MoonStar size={18} className="text-gold-400" aria-hidden="true" />
-              <h2 className="mt-2 text-lg sm:text-xl font-extrabold text-white">Get in touch</h2>
+              <h2 className="mt-2 text-lg sm:text-xl font-extrabold text-white">تواصل معنا · Get in touch</h2>
               <p className="mt-1.5 max-w-md text-xs sm:text-sm leading-relaxed text-white/60">
-                Questions, feedback or ideas for Taqwaaa? We read every message and would
-                love to hear how the platform serves you.
+                لديك استفسار، اقتراح أو ملاحظات حول منصة تقوى؟ نسعد دائماً بسماع آرائكم وملاحظاتكم لتطوير المنصة.
               </p>
               <a href="mailto:contact@taqwaa.app" className="mt-4 sm:mt-6 inline-block w-full sm:w-auto">
                 <Button className="w-full sm:w-auto !py-2.5 !text-xs sm:!text-sm" aria-label="Email Taqwaa">
@@ -88,15 +124,14 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
             <MapPin size={18} className="text-gold-700" aria-hidden="true" />
             <h2 className="mt-2 font-arabic text-lg sm:text-xl font-extrabold text-ink-900" dir="rtl">من المغرب بِمحبّة</h2>
             <p className="mt-1.5 text-xs sm:text-sm leading-relaxed text-ink-600">
-              Designed &amp; developed by{" "}
-              <span className="font-bold text-gold-700">Anas Lagziri</span> — crafted with
-              care for the Muslim community, first in Morocco then everywhere.
+              تم التطوير والتصميم بواسطة{" "}
+              <span className="font-bold text-gold-700">أنس لغزيري (Anas Lagziri)</span> — منصة إسلامية صُممت بعناية للمجتمع المسلم في المغرب وحول العالم.
             </p>
             <button
               onClick={() => onNavigate("home")}
               className="btn btn-secondary btn-sm mt-4 sm:mt-6 cursor-pointer !py-2 !text-xs sm:!text-sm w-full sm:w-auto"
             >
-              Back to Home
+              العودة للرئيسية · Back to Home
             </button>
           </div>
         </section>
@@ -105,25 +140,21 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
         <section className="mt-8 sm:mt-10 grid gap-3 sm:gap-4 pb-4 md:grid-cols-2" aria-label="Privacy and terms">
           <details className="card group p-4 open:bg-white sm:p-5">
             <summary className="flex cursor-pointer list-none items-center justify-between font-arabic text-xs sm:text-sm font-bold text-ink-900 [&::-webkit-details-marker]:hidden">
-              Privacy Policy
+              سياسة الخصوصية · Privacy Policy
               <span className="text-gold-700 transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
             </summary>
             <p className="mt-2.5 border-t border-ink-200/70 pt-2.5 text-xs sm:text-sm leading-relaxed text-ink-600">
-              Taqwaaa stores your preferences (city, favourites) locally on your device only.
-              We do not collect personal data, use cookies for tracking, or require an
-              account. Prayer-time and Quran requests are made directly to their public APIs.
+              تحترم منصة تقوى (Taqwaa) خصوصيتك التامة. تحفظ التفضيلات (كالمدينة والمفضلة) محلياً على جهازك فقط. لا نقوم بتتبع بياناتك الشخصية أو استخدام ملفات تتبع إعلانية، وتتم طلبات الأوقات والنصوص من المصادر المفتوحة المعتمدة مباشرة.
             </p>
           </details>
 
           <details className="card group p-4 open:bg-white sm:p-5">
             <summary className="flex cursor-pointer list-none items-center justify-between font-arabic text-xs sm:text-sm font-bold text-ink-900 [&::-webkit-details-marker]:hidden">
-              Terms of Use
+              شروط الاستخدام · Terms of Use
               <span className="text-gold-700 transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
             </summary>
             <p className="mt-2.5 border-t border-ink-200/70 pt-2.5 text-xs sm:text-sm leading-relaxed text-ink-600">
-              Taqwaaa is offered free of charge for personal, non-commercial use. While we
-              strive for accuracy of timings and texts, please verify with your local
-              mosque. Quranic text is provided by alquran.cloud; timings by aladhan.com.
+              تقوى منصة إسلامية مجانية للاستخدام الشخصي وغير التجاري. نحرص دائماً على دقة النصوص والمواقيت الحسابية، والنصوص القرآنية مستمدة من AlQuran Cloud ومواقيت الصلاة من Aladhan.
             </p>
           </details>
         </section>

@@ -47,7 +47,7 @@ function Logo({ onClick }: { onClick: () => void }) {
       <span className="flex flex-col items-start leading-none">
         <span className="font-quran text-[22px] sm:text-[26px] font-bold leading-none text-gradient-gold">تقوى</span>
         <span className="mt-0.5 sm:mt-1 text-[8.5px] sm:text-[9px] font-extrabold uppercase tracking-[0.32em] text-gold-700">
-          Taqwaaa
+          Taqwaa
         </span>
       </span>
     </button>

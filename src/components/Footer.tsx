@@ -40,7 +40,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <div className="leading-none">
                 <span className="font-quran text-2xl font-bold text-gradient-gold-light">تقوى</span>
                 <span className="mt-1 block text-[8.5px] sm:text-[9px] font-extrabold uppercase tracking-[0.34em] text-gold-500">
-                  Taqwaaa
+                  Taqwaa
                 </span>
               </div>
             </div>
@@ -133,7 +133,7 @@ export function Footer({ onNavigate }: FooterProps) {
         <div className="mt-8 sm:mt-12 border-t border-white/8 pt-5 sm:pt-6">
           <div className="flex flex-col items-center justify-between gap-2.5 text-center sm:flex-row sm:text-start">
             <p className="text-[11px] sm:text-xs text-white/45">
-              © {new Date().getFullYear()} <span className="font-semibold text-gold-400">Taqwaaa</span> — جميع الحقوق محفوظة
+              © {new Date().getFullYear()} <span className="font-semibold text-gold-400">Taqwaa</span> — جميع الحقوق محفوظة
             </p>
             <p className="flex items-center gap-1.5 text-[11px] sm:text-xs text-white/45">
               صُنع بِمحبّة في المملكة المغربية
