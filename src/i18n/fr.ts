@@ -435,4 +435,13 @@ export const fr: Translations = {
     termsOfUse: "Conditions d'utilisation",
     aboutContact: "À propos & Contact",
   },
+  download: {
+    buttonText: "Télécharger l'application Android",
+    heroText: "Télécharger l'application Android",
+    cardTitle: "Taqwaaa Android",
+    cardDescription: "Emportez Taqwaaa partout avec vous",
+    cardFeatures: "Coran • Prière • Azkar",
+    versionLabel: "Version",
+    officialApk: "APK officiel Taqwaaa",
+  },
 };

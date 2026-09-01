@@ -4,6 +4,7 @@ import { PrayerTimesPanel } from "../components/PrayerTimesPanel";
 import { FeaturedContent } from "../components/FeaturedContent";
 import { DailyReminder } from "../components/DailyReminder";
 import { SectionTitle } from "../components/SectionTitle";
+import { AndroidDownloadCard } from "../components/AndroidDownloadCard";
 import type { Page } from "../components/Header";
 import { useTranslation } from "../i18n";
 import type { City } from "../types";
@@ -90,6 +91,11 @@ export function HomePage({ onNavigate, selectedCity, onSelectCity }: HomePagePro
               </div>
             </div>
           </div>
+        </section>
+
+        {/* Android Download Card */}
+        <section className="pt-10 sm:pt-16" aria-labelledby="android-download-heading">
+          <AndroidDownloadCard />
         </section>
 
         {/* Daily reminder */}

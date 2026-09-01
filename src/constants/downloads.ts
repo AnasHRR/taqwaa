@@ -1,0 +1,1 @@
+export const APK_DOWNLOAD_URL = "/downloads/taqwaaa.apk";

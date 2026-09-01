@@ -1,0 +1,10 @@
+# Taqwaaa Android APK Placeholder
+
+This is a placeholder file. Replace this with the actual taqwaaa.apk file.
+
+The download URL is: /downloads/taqwaaa.apk
+
+When the real APK is generated:
+1. Build the Android app using the android/ directory
+2. Copy the generated APK to public/downloads/taqwaaa.apk
+3. Verify the download works at https://your-domain.com/downloads/taqwaaa.apk

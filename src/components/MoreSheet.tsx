@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import {
-  BookOpen, Compass, Globe, Heart, Info,
-  Mail, MapPin, Sparkles, X, ShieldCheck
+  BookOpen, Compass, Globe, Info,
+  Mail, MapPin, Smartphone, Sparkles, X, ShieldCheck
 } from "lucide-react";
 import type { Page } from "./Header";
 import { CrescentMoon } from "./CrescentMoon";
 import { LanguageSelector } from "./LanguageSelector";
+import { DownloadButton } from "./DownloadButton";
 import { MOROCCAN_CITIES } from "../constants";
+import { APP_VERSION } from "../constants/app";
 import { useTranslation } from "../i18n";
 import type { City } from "../types";
 import { cn } from "../utils/cn";
@@ -183,6 +185,24 @@ export function MoreSheet({
               <span className="text-sm font-bold text-ink-900">{t("quran.title")}</span>
               <span className="text-[10px] text-ink-500 mt-0.5">114 {t("hero.statsSurahs")}</span>
             </button>
+          </div>
+
+          {/* Download Android App Section */}
+          <div className="divider-gold opacity-50" />
+          <div className="pt-2">
+            <div className="flex items-center justify-between mb-3">
+              <span className="flex items-center gap-1.5 text-xs font-bold text-gold-800">
+                <Smartphone size={13} className="text-gold-600" />
+                {t("download.cardTitle")}
+              </span>
+              <span className="text-[10px] font-bold text-ink-400 uppercase tracking-wider">
+                {t("download.versionLabel")} {APP_VERSION}
+              </span>
+            </div>
+            <DownloadButton variant="sheet" />
+            <p className="mt-2 text-center text-[11px] text-ink-500">
+              {t("download.officialApk")}
+            </p>
           </div>
 
           {/* Privacy & Contact Banner */}

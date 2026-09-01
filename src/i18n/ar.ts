@@ -434,4 +434,13 @@ export const ar: Translations = {
     termsOfUse: "شروط الاستخدام",
     aboutContact: "حول المنصة وتواصل معنا",
   },
+  download: {
+    buttonText: "تحميل تطبيق أندرويد",
+    heroText: "تحميل تطبيق أندرويد",
+    cardTitle: "تقوى أندرويد",
+    cardDescription: "خذ تقوى معك أينما ذهبت",
+    cardFeatures: "القرآن • الصلاة • الأذكار",
+    versionLabel: "الإصدار",
+    officialApk: "APK رسمي لتقوى",
+  },
 };

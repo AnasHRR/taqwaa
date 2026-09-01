@@ -3,6 +3,7 @@ import { BookOpen, Compass, Heart, Home, Info, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 import { useTranslation } from "../i18n";
 import { LanguageSelector } from "./LanguageSelector";
+import { DownloadButton } from "./DownloadButton";
 import { cn } from "../utils/cn";
 
 export type Page = "home" | "quran" | "salaat" | "dua" | "about";
@@ -129,6 +130,11 @@ export function Header({ activePage, onNavigate, onOpenMore }: HeaderProps) {
               </button>
             ))}
           </nav>
+
+          {/* Desktop Download Button */}
+          <div className="border-s border-ink-200/80 ps-4 ms-2">
+            <DownloadButton variant="header" />
+          </div>
 
           {/* Desktop Language Selector */}
           <div className="border-s border-ink-200/80 ps-4">

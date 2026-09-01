@@ -435,4 +435,13 @@ export const en: Translations = {
     termsOfUse: "Terms of Use",
     aboutContact: "About & Contact",
   },
+  download: {
+    buttonText: "Download Android App",
+    heroText: "Download Android App",
+    cardTitle: "Taqwaaa Android",
+    cardDescription: "Take Taqwaaa with you everywhere",
+    cardFeatures: "Quran • Prayer • Azkar",
+    versionLabel: "Version",
+    officialApk: "Official Taqwaaa APK",
+  },
 };

@@ -3,6 +3,7 @@ import { Button } from "./Button";
 import { CrescentMoon } from "./CrescentMoon";
 import { IslamicPattern } from "./IslamicPattern";
 import { MosqueSilhouette } from "./MosqueSilhouette";
+import { DownloadButton } from "./DownloadButton";
 import { useTranslation } from "../i18n";
 
 interface HeroProps {
@@ -93,6 +94,11 @@ export function Hero({ onExplore, onStart }: HeroProps) {
               {t("hero.startBtn")}
               <ArrowRight size={16} strokeWidth={2} className="rtl-flip" aria-hidden="true" />
             </Button>
+          </div>
+
+          {/* Download Android App Button */}
+          <div className="mt-4 sm:mt-6 animate-fade-in-up" style={{ animationDelay: "360ms" }}>
+            <DownloadButton variant="hero" isAndroid />
           </div>
         </div>
 

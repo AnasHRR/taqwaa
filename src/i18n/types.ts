@@ -279,4 +279,13 @@ export interface Translations {
     termsOfUse: string;
     aboutContact: string;
   };
+  download: {
+    buttonText: string;
+    heroText: string;
+    cardTitle: string;
+    cardDescription: string;
+    cardFeatures: string;
+    versionLabel: string;
+    officialApk: string;
+  };
 }
