@@ -52,6 +52,9 @@ export const ar: Translations = {
     azkar: "الأذكار",
     about: "حول تقوى",
     more: "المزيد",
+    french: "Français",
+    english: "English",
+    arabic: "العربية",
   },
   hero: {
     greeting: "السلام عليكم ورحمة الله وبركاته",

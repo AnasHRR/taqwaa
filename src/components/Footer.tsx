@@ -8,7 +8,7 @@ interface FooterProps {
 }
 
 export function Footer({ onNavigate }: FooterProps) {
-  const { t } = useTranslation();
+  const { t, isRTL } = useTranslation();
 
   const navLinks: { id: Page; label: string }[] = [
     { id: "home", label: t("nav.home") },
@@ -19,7 +19,7 @@ export function Footer({ onNavigate }: FooterProps) {
   ];
 
   return (
-    <footer className="relative mt-14 sm:mt-20 overflow-hidden bg-ink-950 text-white/70 pb-[calc(86px+env(safe-area-inset-bottom,0px))] md:pb-12 text-start">
+    <footer className="relative mt-14 sm:mt-20 overflow-hidden bg-ink-950 text-white/70 pb-[calc(86px+env(safe-area-inset-bottom,0px))] md:pb-12">
       {/* Decorative layers */}
       <IslamicPattern className="pointer-events-none absolute inset-0 h-full w-full" color="#C9A227" opacity={0.07} />
       <div
@@ -69,7 +69,7 @@ export function Footer({ onNavigate }: FooterProps) {
                 <li key={l.id}>
                   <button
                     onClick={() => onNavigate(l.id)}
-                    className="group flex items-center gap-2 text-xs sm:text-sm text-white/60 transition-colors hover:text-gold-300 cursor-pointer text-start"
+                    className="group flex items-center gap-2 text-xs sm:text-sm text-white/60 transition-colors hover:text-gold-300 cursor-pointer"
                   >
                     <span className="h-px w-2.5 bg-gold-500/40 transition-all group-hover:w-4 group-hover:bg-gold-400" aria-hidden="true" />
                     {l.label}
@@ -86,7 +86,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <li>
                 <button
                   onClick={() => onNavigate("quran")}
-                  className="flex items-center gap-1.5 text-start text-xs sm:text-sm text-white/60 transition-colors hover:text-gold-300 cursor-pointer"
+                  className="flex items-center gap-1.5 text-xs sm:text-sm text-white/60 transition-colors hover:text-gold-300 cursor-pointer"
                 >
                   <BookOpen size={12} className="text-gold-600" />
                   {t("nav.quran")}
@@ -95,7 +95,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <li>
                 <button
                   onClick={() => onNavigate("salaat")}
-                  className="flex items-center gap-1.5 text-start text-xs sm:text-sm text-white/60 transition-colors hover:text-gold-300 cursor-pointer"
+                  className="flex items-center gap-1.5 text-xs sm:text-sm text-white/60 transition-colors hover:text-gold-300 cursor-pointer"
                 >
                   <Compass size={12} className="text-gold-600" />
                   {t("nav.prayer")}
@@ -104,7 +104,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <li>
                 <button
                   onClick={() => onNavigate("dua")}
-                  className="flex items-center gap-1.5 text-start text-xs sm:text-sm text-white/60 transition-colors hover:text-gold-300 cursor-pointer"
+                  className="flex items-center gap-1.5 text-xs sm:text-sm text-white/60 transition-colors hover:text-gold-300 cursor-pointer"
                 >
                   <Heart size={12} className="text-gold-600" />
                   {t("nav.azkar")}
@@ -113,7 +113,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <li>
                 <button
                   onClick={() => onNavigate("home")}
-                  className="flex items-center gap-1.5 text-start text-xs sm:text-sm text-white/60 transition-colors hover:text-gold-300 cursor-pointer"
+                  className="flex items-center gap-1.5 text-xs sm:text-sm text-white/60 transition-colors hover:text-gold-300 cursor-pointer"
                 >
                   <Home size={12} className="text-gold-600" />
                   {t("nav.home")}
@@ -157,7 +157,7 @@ export function Footer({ onNavigate }: FooterProps) {
 
         {/* Bottom bar */}
         <div className="mt-8 sm:mt-12 border-t border-white/8 pt-5 sm:pt-6">
-          <div className="flex flex-col items-center justify-between gap-2.5 text-center sm:flex-row sm:text-start">
+          <div className="flex flex-col items-center justify-between gap-2.5 text-center sm:flex-row">
             <p className="text-[11px] sm:text-xs text-white/45">
               © {new Date().getFullYear()} <span className="font-semibold text-gold-400">{t("common.appName")}</span> — {t("common.allRightsReserved")}
             </p>

@@ -3,23 +3,6 @@ import { Check, ChevronDown, Globe } from "lucide-react";
 import { useLanguage, LANGUAGES, type Language } from "../i18n";
 import { cn } from "../utils/cn";
 
-interface LanguageSelectorProps {
-  variant?: "desktop-header" | "mobile-header" | "sheet-list";
-  className?: string;
-  onLanguageChange?: (lang: Language) => void;
-}
-
-const LANGUAGE_LIST: Array<{
-  code: Language;
-  name: string;
-  nativeName: string;
-  flag: string;
-}> = [
-  { code: "fr", name: "Français", nativeName: "Français", flag: "🇫🇷" },
-  { code: "en", name: "English", nativeName: "English", flag: "🇬🇧" },
-  { code: "ar", name: "Arabic", nativeName: "العربية", flag: "🇲🇦" },
-];
-
 export function LanguageSelector({
   variant = "desktop-header",
   className,
@@ -60,6 +43,13 @@ export function LanguageSelector({
   };
 
   const currentLang = LANGUAGES[language];
+
+  // Build language list from translations
+  const LANGUAGE_LIST = [
+    { code: "fr" as Language, nativeName: t("nav.french") || "Français", name: t("nav.french") || "Français", flag: "🇫🇷" },
+    { code: "en" as Language, nativeName: t("nav.english") || "English", name: t("nav.english") || "English", flag: "🇬🇧" },
+    { code: "ar" as Language, nativeName: t("nav.arabic") || "العربية", name: t("nav.arabic") || "العربية", flag: "🇲🇦" },
+  ];
 
   /* =========================================================================
      1. SHEET LIST VARIANT (MoreSheet drawer: More → Settings → Language)
@@ -146,7 +136,7 @@ export function LanguageSelector({
           <div
             className={cn(
               "absolute top-full z-50 mt-2 min-w-[170px] overflow-hidden rounded-2xl border border-gold-500/25 bg-white p-1.5 shadow-[0_12px_36px_-10px_rgba(201,162,39,0.3)] animate-slide-down-in",
-              isRTL ? "left-0" : "right-0"
+              isRTL ? "inset-inline-end: 0" : "inset-inline-start: 0"
             )}
             role="listbox"
             aria-label={t("common.selectLanguage")}
@@ -219,7 +209,7 @@ export function LanguageSelector({
         <div
           className={cn(
             "absolute top-full z-50 mt-2.5 w-52 overflow-hidden rounded-2xl border border-gold-500/25 bg-white p-1.5 shadow-[0_16px_40px_-12px_rgba(201,162,39,0.35)] backdrop-blur-xl animate-slide-down-in",
-            isRTL ? "left-0" : "right-0"
+            isRTL ? "inset-inline-end: 0" : "inset-inline-start: 0"
           )}
           role="listbox"
           aria-label={t("common.selectLanguage")}
@@ -273,4 +263,10 @@ export function LanguageSelector({
       )}
     </div>
   );
+}
+
+interface LanguageSelectorProps {
+  variant?: "desktop-header" | "mobile-header" | "sheet-list";
+  className?: string;
+  onLanguageChange?: (lang: Language) => void;
 }

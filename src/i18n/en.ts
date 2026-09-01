@@ -52,6 +52,9 @@ export const en: Translations = {
     azkar: "Azkar",
     about: "About",
     more: "More",
+    french: "Français",
+    english: "English",
+    arabic: "العربية",
   },
   hero: {
     greeting: "Assalamu Alaykum wa Rahmatullah",

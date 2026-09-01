@@ -17,7 +17,7 @@ export function BottomNav({
   onOpenMore,
   isMoreOpen = false,
 }: BottomNavProps) {
-  const { t, isRTL } = useTranslation();
+  const { t } = useTranslation();
   const [scrollHidden, setScrollHidden] = useState(false);
   const lastScrollY = useRef(0);
   const ticking = useRef(false);
@@ -67,8 +67,10 @@ export function BottomNav({
     }
   };
 
-  // Compute translateX offset taking RTL into account
-  const pillTranslateX = isRTL ? -activeIndex * 100 : activeIndex * 100;
+  // Compute inset-inline-start offset for the active pill (works in both LTR and RTL)
+  // Each item takes 20% of the pill width (1/5), plus 6px padding on each side
+  const pillItemWidthPercent = 100 / 5; // 20%
+  const pillOffsetPercent = activeIndex * pillItemWidthPercent;
 
   return (
     <nav
@@ -82,13 +84,13 @@ export function BottomNav({
         {/* Subtle gold shimmer line at the top */}
         <div className="floating-nav-shimmer" aria-hidden="true" />
 
-        {/* Sliding active pill background */}
+        {/* Sliding active pill background - uses inset-inline-start for RTL support */}
         {activeIndex >= 0 && (
           <span
             className="floating-nav-active-pill"
             aria-hidden="true"
             style={{
-              transform: `translateX(${pillTranslateX}%)`,
+              insetInlineStart: `calc(${pillOffsetPercent}% + 6px)`,
             }}
           />
         )}

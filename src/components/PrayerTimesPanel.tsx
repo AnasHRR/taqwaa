@@ -376,7 +376,7 @@ export function PrayerTimesPanel({
           ) : error ? (
             <ErrorState error={error} onRetry={refetch} retryText={t("common.retry")} />
           ) : (
-            <div className="grid gap-5 lg:grid-cols-[300px_1fr] lg:items-center">
+            <div className="grid gap-5 lg:grid-cols-[minmax(280px,1fr)_1fr] lg:items-center">
               {countdownBlock}
               <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
                 {PRAYER_KEYS.map((key, i) => prayerTile(key, i, true))}

@@ -6,14 +6,15 @@ import {
 import type { ReactNode } from "react";
 import { AzkarCard, type DuaItem } from "../components/AzkarCard";
 import { cn } from "../utils/cn";
+import { useTranslation } from "../i18n";
 
-const CATEGORIES: { id: string; label: string; icon: ReactNode }[] = [
-  { id: "all", label: "الكل", icon: <ListFilter size={13} /> },
-  { id: "morning", label: "الصباح", icon: <Sunrise size={13} /> },
-  { id: "evening", label: "المساء", icon: <Moon size={13} /> },
-  { id: "prayer", label: "الصلاة", icon: <Compass size={13} /> },
-  { id: "protection", label: "الحماية", icon: <Shield size={13} /> },
-  { id: "daily", label: "يومية", icon: <BookOpen size={13} /> },
+const CATEGORIES: { id: string; labelKey: string; icon: ReactNode }[] = [
+  { id: "all", labelKey: "azkar.categories.all", icon: <ListFilter size={13} /> },
+  { id: "morning", labelKey: "azkar.categories.morning", icon: <Sunrise size={13} /> },
+  { id: "evening", labelKey: "azkar.categories.evening", icon: <Moon size={13} /> },
+  { id: "prayer", labelKey: "azkar.categories.prayer", icon: <Compass size={13} /> },
+  { id: "protection", labelKey: "azkar.categories.protection", icon: <Shield size={13} /> },
+  { id: "daily", labelKey: "azkar.categories.daily", icon: <BookOpen size={13} /> },
 ];
 
 const DUAS: DuaItem[] = [
@@ -35,6 +36,7 @@ const DUAS: DuaItem[] = [
 ];
 
 export function DuaPage() {
+  const { t, language } = useTranslation();
   const [activeCat, setActiveCat] = useState("all");
   const [favorites, setFavorites] = useState<number[]>(() => {
     try {
@@ -64,9 +66,11 @@ export function DuaPage() {
             <Heart size={24} strokeWidth={1.7} />
           </span>
           <div>
-            <h1 className="font-quran text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight text-gradient-gold">الأذكار والدعاء</h1>
+            <h1 className="font-quran text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight text-gradient-gold">
+              {t("azkar.title")}
+            </h1>
             <p className="mt-1 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-ink-500">
-              Azkar & Duas · أدعية مختارة من السنة الصحيحة
+              {t("azkar.subtitle")}
             </p>
           </div>
         </header>
@@ -76,7 +80,7 @@ export function DuaPage() {
           <TasbeehCounter />
 
           {/* Category filter */}
-          <div className="mt-6 flex gap-1.5 overflow-x-auto pb-1 no-scrollbar" role="group" aria-label="تصفية الأذكار">
+          <div className="mt-6 flex gap-1.5 overflow-x-auto pb-1 no-scrollbar" role="group" aria-label={t("common.filter")}>
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
@@ -85,7 +89,7 @@ export function DuaPage() {
                 className={cn("chip shrink-0 !py-2 !px-3.5 !text-xs", activeCat === cat.id && "chip-active")}
               >
                 {cat.icon}
-                {cat.label}
+                {t(cat.labelKey)}
               </button>
             ))}
           </div>
@@ -106,7 +110,7 @@ export function DuaPage() {
           {filteredDuas.length === 0 && (
             <div className="card mt-5 flex flex-col items-center py-12 text-center">
               <ListFilter size={32} className="mb-2.5 text-ink-300" aria-hidden="true" />
-              <p className="font-arabic text-sm font-bold text-ink-700">لا توجد أدعية في هذا التصنيف</p>
+              <p className="font-arabic text-sm font-bold text-ink-700">{t("azkar.emptyCategory")}</p>
             </div>
           )}
         </div>
@@ -116,17 +120,18 @@ export function DuaPage() {
 }
 
 function TasbeehCounter() {
+  const { t, language, formatNumber } = useTranslation();
   const [count, setCount] = useState(0);
   const target = 33;
 
-  const phrases = [
-    { text: "سُبْحَانَ اللَّهِ", sub: "SubhanAllah" },
-    { text: "الْحَمْدُ لِلَّهِ", sub: "Alhamdulillah" },
-    { text: "اللَّهُ أَكْبَرُ", sub: "Allahu Akbar" },
+  const phraseKeys = [
+    { textKey: "azkar.tasbeehPhrases.0.text", subKey: "azkar.tasbeehPhrases.0.sub", meaningKey: "azkar.tasbeehPhrases.0.meaning" },
+    { textKey: "azkar.tasbeehPhrases.1.text", subKey: "azkar.tasbeehPhrases.1.sub", meaningKey: "azkar.tasbeehPhrases.1.meaning" },
+    { textKey: "azkar.tasbeehPhrases.2.text", subKey: "azkar.tasbeehPhrases.2.sub", meaningKey: "azkar.tasbeehPhrases.2.meaning" },
   ];
 
-  const phraseIdx = Math.floor(count / target) % phrases.length;
-  const phrase = phrases[phraseIdx];
+  const phraseIdx = Math.floor(count / target) % phraseKeys.length;
+  const phraseKey = phraseKeys[phraseIdx];
   const displayCount = count % target;
   const progress = (displayCount / target) * 100;
 
@@ -138,7 +143,7 @@ function TasbeehCounter() {
   };
 
   return (
-    <section className="card-dark relative overflow-hidden p-5 sm:p-7" aria-label="المسبحة الإلكترونية">
+    <section className="card-dark relative overflow-hidden p-5 sm:p-7" aria-label={t("azkar.tasbeehTitle")}>
       {/* Decorations */}
       <Sparkles className="pointer-events-none absolute end-5 top-5 text-gold-500/30" size={16} aria-hidden="true" />
 
@@ -148,25 +153,25 @@ function TasbeehCounter() {
           <div className="mb-3 flex items-center justify-between" dir="rtl">
             <span className="flex items-center gap-1.5 font-arabic text-xs font-extrabold tracking-widest text-gold-300">
               <CircleDot size={14} />
-              المسبحة الإلكترونية
+              {t("azkar.tasbeehTitle")}
             </span>
             <button
               onClick={() => setCount(0)}
               className="flex cursor-pointer items-center gap-1 rounded-xl border border-white/15 px-2.5 py-1 font-arabic text-[10.5px] font-bold text-white/60 transition-colors hover:border-gold-500/40 hover:text-gold-300"
             >
               <RotateCcw size={11} />
-              إعادة
+              {t("azkar.resetCounter")}
             </button>
           </div>
 
           <p className="font-quran text-3xl sm:text-4xl font-bold leading-tight text-gradient-gold-light" dir="rtl">
-            {phrase.text}
+            {t(phraseKey.textKey)}
           </p>
-          <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white/45">{phrase.sub}</p>
+          <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.2em] text-white/45">{t(phraseKey.subKey)}</p>
 
           {/* Phase indicator */}
           <div className="mt-4 flex items-center justify-center gap-2 md:justify-start" aria-hidden="true">
-            {phrases.map((_, i) => (
+            {phraseKeys.map((_, i) => (
               <span
                 key={i}
                 className={cn(
@@ -182,7 +187,7 @@ function TasbeehCounter() {
         <div className="flex flex-col items-center gap-3 self-center">
           <button
             onClick={handleTap}
-            aria-label={`عدّ التسبيحة — العدد الحالي ${displayCount}`}
+            aria-label={`${t("azkar.tapToCount")} — ${t("common.countBadge")} ${displayCount}`}
             className="group relative flex h-[94px] w-[94px] sm:h-[110px] sm:w-[110px] cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-gold-300 via-gold-500 to-gold-700 shadow-[0_12px_36px_-10px_rgba(201,162,39,0.85)] transition-all active:scale-90 select-none"
           >
             <span className="absolute inset-[4px] rounded-full border border-dashed border-white/40 transition-transform duration-500 group-hover:rotate-45" aria-hidden="true" />
@@ -196,8 +201,8 @@ function TasbeehCounter() {
               <div className="progress-fill" style={{ width: `${progress}%` }} />
             </div>
             <div className="flex justify-between font-arabic text-[9.5px] font-semibold text-white/50" dir="rtl">
-              <span>المجموع: {count}</span>
-              <span>{displayCount}/{target}</span>
+              <span>{t("azkar.roundsCompleted")}: {formatNumber(count)}</span>
+              <span>{formatNumber(displayCount)}/{formatNumber(target)}</span>
             </div>
           </div>
         </div>
